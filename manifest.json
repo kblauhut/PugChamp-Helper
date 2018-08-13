@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "PugChamp Helper",
+  "description": "PugChamp ETF2L division and username integration.",
+  "version": "1.0",
+  "permissions": ["storage"],
+  "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    }
+}
