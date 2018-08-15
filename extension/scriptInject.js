@@ -20,13 +20,11 @@ function idParse(){
     var duplicate = false;
     playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
-    for (var x = 0; x < playersAdded.length; x++) {
-      if (x != 0) {
+    for (var x = 1; x < playersAdded.length; x++) {
         for (var z = 0; z < idArray.length; z++) {
           if (idArray[z] == playersAdded[x]) {
             duplicate = true;
           }
-        }
       }
       if (duplicate != true) {
         htmlString = playersAdded[x].innerHTML;
