@@ -1,1 +1,17 @@
-chrome.runtime.onInstalled.addListener(function() {});
+chrome.runtime.onInstalled.addListener(function() {
+  console.log("onInstalled function called.");
+
+  chrome.storage.sync.set({colorCoding: true, nameSubstitution: true}, function() {
+      console.log("variables 'colorCoding' and nameSubstitution set to true. Should be accessible from anywhere in the extension now.");
+    });
+
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+    chrome.declarativeContent.onPageChanged.addRules([{
+      conditions: [new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'developer.chrome.com'},
+      })
+      ],
+          actions: [new chrome.declarativeContent.ShowPageAction()]
+    }]);
+  });
+});
