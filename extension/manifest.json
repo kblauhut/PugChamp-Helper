@@ -1,27 +1,37 @@
 {
-   "manifest_version":2,
-   "name":"PugChamp Helper",
-   "description":"PugChamp ETF2L division and username integration.",
-   "version":"1.0",
-   "permissions":[
-      "storage"
-   ],
-   "background":{
-      "scripts":[
-         "background.js"
+  "manifest_version":2,
+  "name":"PugChamp Helper",
+  "description":"PugChamp ETF2L division and username integration.",
+  "version":"1.0",
+  "permissions":[
+    "declarativeContent",
+    "storage"
+  ],
+  "background":{
+    "scripts":[
+      "background.js"
+    ],
+    "persistent":false
+  },
+  "content_scripts":[
+    {
+      "matches":[
+        "https://eu.pug.champ.gg/*",
+        "http://eu.pug.champ.gg/*"
       ],
-      "persistent":false
-   },
-   "content_scripts":[
-      {
-         "matches":[
-            "https://eu.pug.champ.gg/*",
-            "http://eu.pug.champ.gg/*"
-         ],
-         "js":[
-            "scriptInject.js"
-         ],
-         "run_at": "document_end"
-      }
-   ]
+      "js":[
+        "scriptInject.js"
+      ],
+      "run_at":"document_end"
+    }
+  ],
+  "page_action":{
+    "default_popup":"popup.html",
+    "default_icon":{
+
+    }
+  },
+  "icons":{
+
+  }
 }
