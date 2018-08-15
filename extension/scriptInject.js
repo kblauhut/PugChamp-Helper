@@ -9,18 +9,48 @@ const colorNoDiv = "#B0C3D9";
 
 
 document.addEventListener("loaded", function(event){
-        colorScript();
+        idParse();
 });
 
-
-function colorScript(){
+function idParse(){
     var playerAdded;
+    var htmlString;
+    var idArray = [];
+    var y = 0;
+    var duplicate = false;
     playerAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
-    for (var i = 0; i < playerAdded.length; i++) {
-        playerAdded[i].style.color = colorLow;
+    for (var x = 0; x < playerAdded.length; x++) {
+      if (x != 0) {
+        for (var z = 0; z < idArray.length; z++) {
+          if (idArray[z] == playerAdded[x]) {
+            duplicate = true;
+          }
+        }
+      }
+      if (duplicate != true) {
+        htmlString = playerAdded[x].innerHTML;
+        htmlString = htmlString.substring(htmlString.indexOf("/player/")+8,htmlString.indexOf("/player/")+25);
+        idArray[y] = htmlString;
+        y++;
+      }
+      duplicate = false;
+    }
+    console.log(idArray[2]);
+    console.log(playerAdded);
+    console.log(playerAdded.length);
+}
+
+function etf2lAPI(idArray){
+
+}
+
+/*function colorScript(){
+    for (var x = 0; x < playerAdded.length; x++) {
+        playerAdded[x].style.color = colorLow;
     }
 
     console.log(playerAdded);
     console.log(playerAdded.length);
-};
+}
+*/
