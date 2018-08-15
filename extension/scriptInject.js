@@ -18,18 +18,18 @@ function idParse(){
     var idArray = [];
     var y = 0;
     var duplicate = false;
-    playerAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
-    for (var x = 0; x < playerAdded.length; x++) {
+    for (var x = 0; x < playersAdded.length; x++) {
       if (x != 0) {
         for (var z = 0; z < idArray.length; z++) {
-          if (idArray[z] == playerAdded[x]) {
+          if (idArray[z] == playersAdded[x]) {
             duplicate = true;
           }
         }
       }
       if (duplicate != true) {
-        htmlString = playerAdded[x].innerHTML;
+        htmlString = playersAdded[x].innerHTML;
         htmlString = htmlString.substring(htmlString.indexOf("/player/")+8,htmlString.indexOf("/player/")+25);
         idArray[y] = htmlString;
         y++;
@@ -37,8 +37,8 @@ function idParse(){
       duplicate = false;
     }
     console.log(idArray[2]);
-    console.log(playerAdded);
-    console.log(playerAdded.length);
+    console.log(playersAdded);
+    console.log(playersAdded.length);
 }
 
 function etf2lAPI(idArray){
