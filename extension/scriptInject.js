@@ -9,56 +9,19 @@ const colorNoDiv = "#B0C3D9";
 
 
 document.addEventListener("loaded", function(event) {
-    var idArray = idParse();
-    etf2lAPI(idArray);
+    var playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    var idArray;
+    requestData();
 });
 
-function requestData(){
-    var playerAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
-    
+function requestData() {
+    chrome.runtime.sendMessage({message: "request"}, function(response) {
+    console.log(response);
+ });
 }
 
-function requestUpdatedData(){
+function requestUpdatedData() {
 
-}
-
-function idParse() {
-    var htmlString;
-    var idArray = [];
-    var y = 0;
-    var duplicate = false;
-
-    for (var x = 0; x < playersAdded.length; x++) {
-        htmlString = playersAdded[x].innerHTML;
-        htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
-        if (x != 0) {
-            for (var z = 0; z < idArray.length; z++) {
-
-                if (idArray[z] == htmlString) {
-                    duplicate = true;
-                }
-            }
-        }
-        if (duplicate != true) {
-            idArray[y] = htmlString;
-            y++;
-        }
-        duplicate = false;
-    }
-    return idArray;
-}
-
-function etf2lAPI(idArray) {
-    var xhr = new XMLHttpRequest();
-    var divArray = [];
-    var arrayArray = [];
-
-    for (var i = 0; i < idArray.length; i++) {
-      xhr.open("GET", "http://api.etf2l.org/player/" + idArray[i] + ".json", true);
-      xhr.send();
-      divArray[i] = xhr.responseText;
-    }
-    console.log(divArray[2]);
 }
 
 /*function colorScript(){
