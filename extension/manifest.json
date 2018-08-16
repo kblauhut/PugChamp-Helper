@@ -5,7 +5,9 @@
   "version":"1.0",
   "permissions":[
     "declarativeContent",
-    "storage"
+    "storage",
+    "http://api.etf2l.org/*",
+    "https://api.etf2l.org/*"
   ],
   "background":{
     "scripts":[

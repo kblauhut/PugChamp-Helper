@@ -9,7 +9,8 @@ const colorNoDiv = "#B0C3D9";
 
 
 document.addEventListener("loaded", function(event) {
-    idParse();
+    var idArray = idParse();
+    etf2lAPI(idArray);
 });
 
 function idParse() {
@@ -21,7 +22,6 @@ function idParse() {
     playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
     for (var x = 0; x < playersAdded.length; x++) {
-<<<<<<< HEAD
         htmlString = playersAdded[x].innerHTML;
         htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
         if (x != 0) {
@@ -37,31 +37,21 @@ function idParse() {
             y++;
         }
         duplicate = false;
-=======
-      htmlString = playersAdded[x].innerHTML;
-      htmlString = htmlString.substring(htmlString.indexOf("/player/")+8,htmlString.indexOf("/player/")+25);
-      if (x != 0) {
-        for (var z = 0; z < idArray.length; z++) {
-
-          if (idArray[z] == htmlString) {
-            duplicate = true;
-          }
-        }
-      }
-      if (duplicate != true) {
-        idArray[y] = htmlString;
-        y++;
-      }
-      duplicate = false;
->>>>>>> 4872763d019ccd9b0dc3d75d2f90b9fbf5bf94e2
     }
-    console.log(idArray[2]);
-    console.log(idArray);
-    console.log(idArray.length);
+    return idArray;
 }
 
 function etf2lAPI(idArray) {
+    var xhr = new XMLHttpRequest();
+    var divArray = [];
+    var arrayArray = [];
 
+    for (var i = 0; i < idArray.length; i++) {
+      xhr.open("GET", "http://api.etf2l.org/player/" + idArray[i] + ".json", true);
+      xhr.send();
+      divArray[i] = xhr.responseText;
+    }
+    console.log(divArray[2]);
 }
 
 /*function colorScript(){
