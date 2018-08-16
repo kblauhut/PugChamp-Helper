@@ -8,11 +8,11 @@ const colorNoDiv = "#B0C3D9";
 
 
 
-document.addEventListener("loaded", function(event){
-        idParse();
+document.addEventListener("loaded", function(event) {
+    idParse();
 });
 
-function idParse(){
+function idParse() {
     var playerAdded;
     var htmlString;
     var idArray = [];
@@ -20,26 +20,29 @@ function idParse(){
     var duplicate = false;
     playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
-    for (var x = 1; x < playersAdded.length; x++) {
-        for (var z = 0; z < idArray.length; z++) {
-          if (idArray[z] == playersAdded[x]) {
-            duplicate = true;
-          }
-      }
-      if (duplicate != true) {
+    for (var x = 0; x < playersAdded.length; x++) {
         htmlString = playersAdded[x].innerHTML;
-        htmlString = htmlString.substring(htmlString.indexOf("/player/")+8,htmlString.indexOf("/player/")+25);
-        idArray[y] = htmlString;
-        y++;
-      }
-      duplicate = false;
+        htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
+        if (x != 0) {
+            for (var z = 0; z < idArray.length; z++) {
+
+                if (idArray[z] == htmlString) {
+                    duplicate = true;
+                }
+            }
+        }
+        if (duplicate != true) {
+            idArray[y] = htmlString;
+            y++;
+        }
+        duplicate = false;
     }
     console.log(idArray[2]);
-    console.log(playersAdded);
-    console.log(playersAdded.length);
+    console.log(idArray);
+    console.log(idArray.length);
 }
 
-function etf2lAPI(idArray){
+function etf2lAPI(idArray) {
 
 }
 
