@@ -13,13 +13,20 @@ document.addEventListener("loaded", function(event) {
     etf2lAPI(idArray);
 });
 
+function requestData(){
+    var playerAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    
+}
+
+function requestUpdatedData(){
+
+}
+
 function idParse() {
-    var playerAdded;
     var htmlString;
     var idArray = [];
     var y = 0;
     var duplicate = false;
-    playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
     for (var x = 0; x < playersAdded.length; x++) {
         htmlString = playersAdded[x].innerHTML;
