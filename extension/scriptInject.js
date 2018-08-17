@@ -14,30 +14,19 @@ document.addEventListener("loaded", function(event) {
 });
 
 function idParse() {
-    var playerAdded;
     var htmlString;
     var idArray = [];
-    var y = 0;
-    var duplicate = false;
-    playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    let playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
 
     for (var x = 0; x < playersAdded.length; x++) {
         htmlString = playersAdded[x].innerHTML;
-        htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
-        if (x != 0) {
-            for (var z = 0; z < idArray.length; z++) {
+        let id = playersAdded[x].children[1].firstElementChild.getAttribute("href").substring(8);
 
-                if (idArray[z] == htmlString) {
-                    duplicate = true;
-                }
-            }
+        if (! idArray.includes(id)) {
+            idArray.push(id);
         }
-        if (duplicate != true) {
-            idArray[y] = htmlString;
-            y++;
-        }
-        duplicate = false;
     }
+    
     return idArray;
 }
 
