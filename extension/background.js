@@ -15,7 +15,8 @@ chrome.runtime.onInstalled.addListener(function() {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.message == "request") {
-
+      var idArray = request.idArray;
+      var divArray = etf2lAPI(idArray);
     } else if (request.message == "update") {
 
     }
@@ -24,43 +25,44 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 
 
-
-
-function idParse(playersAdded) {
-    var htmlString;
-    var idArray = [];
-    var y = 0;
-    var duplicate = false;
-
-    for (var x = 0; x < playersAdded.length; x++) {
-        htmlString = playersAdded[x].innerHTML;
-        htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
-        if (x != 0) {
-            for (var z = 0; z < idArray.length; z++) {
-
-                if (idArray[z] == htmlString) {
-                    duplicate = true;
-                }
-            }
-        }
-        if (duplicate != true) {
-            idArray[y] = htmlString;
-            y++;
-        }
-        duplicate = false;
-    }
-    return idArray;
-}
-
 function etf2lAPI(idArray) {
     var xhr = new XMLHttpRequest();
     var divArray = [];
     var arrayArray = [];
+    var url;
+    var tempArrayTeams;
+    var tempArrayTeamType;
+    var sixes = false;
 
     for (var i = 0; i < idArray.length; i++) {
-      xhr.open("GET", "http://api.etf2l.org/player/" + idArray[i] + ".json", true);
+      url = "http://api.etf2l.org/player/" + idArray[i] + ".json";
+      xhr.open("GET", url, true);
+      xhr.responseType = "json"
       xhr.send();
-      divArray[i] = xhr.responseText;
+      xhr.onload = function () {
+        if (xhr.response.status.code != 404) {
+          if (xhr.response.player.teams = null) {
+            divArray[i] = "noETF2L";
+          } else {
+            tempArrayTeams = xhr.response.player.teams;
+            for (var o = 0; o < tempArrayTeams.length; o++) {
+              tempArrayTeamType = xhr.response.player.teams[o].type;
+              console.log(tempArrayTeamType);
+              if (tempArrayTeamType == "6on6") {
+                //Done Till Here
+                sixes = true
+                console.log(xhr.response.player.name);
+                console.log(xhr.response.player.teams[o].competitions);
+              }
+            }
+          }
+        } else {
+          divArray[i] = "noETF2L";
+        }
+      }
+        xhr.onerror = function () {
+        divArray[i] = "error"
+      }
     }
-    console.log(divArray[2]);
+    console.log(divArray);
 }
