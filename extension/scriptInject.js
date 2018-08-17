@@ -1,36 +1,22 @@
 document.addEventListener("loaded", function(event) {
-    var playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
-    var idArray = idParse(playersAdded);
-    var packagedArray = apiRequest(idArray);
+    let playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    let idArray = findIds(playersAdded);
+    let packagedArray = apiRequest(idArray);
 });
 
-function apiRequest(idArray) {
-    chrome.runtime.sendMessage({message: "request", idArray: idArray}, function(response) {
+function apiRequest(idList) {
+    chrome.runtime.sendMessage({message: "request", idArray: idList}, function(response) {
  });
 }
 
-function idParse(playersAdded) {
-    var htmlString;
-    var idArray = [];
-    var y = 0;
-    var duplicate = false;
+function findIds(playersAdded) {
+    let idArray = [];
 
     for (var x = 0; x < playersAdded.length; x++) {
-        htmlString = playersAdded[x].innerHTML;
-        htmlString = htmlString.substring(htmlString.indexOf("/player/") + 8, htmlString.indexOf("/player/") + 25);
-        if (x != 0) {
-            for (var z = 0; z < idArray.length; z++) {
-
-                if (idArray[z] == htmlString) {
-                    duplicate = true;
-                }
-            }
+        let id = playersAdded[x].children[1].firstElementChild.getAttribute("href").substring(8);
+        if (! idArray.includes(id)) {
+            idArray.push(id);
         }
-        if (duplicate != true) {
-            idArray[y] = htmlString;
-            y++;
-        }
-        duplicate = false;
     }
     return idArray;
 }
