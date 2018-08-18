@@ -23,47 +23,54 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 });
 
-
-
 function etf2lAPI(idArray) {
-    var xhr = new XMLHttpRequest();
+    var xhr = [];
     var divArray = [];
-    var arrayArray = [];
-    var url;
-    var tempArrayTeams;
-    var tempArrayTeamType;
-    var sixes = false;
+    var nameArray = [];
+    var teamNameArray = [];
+    var url = [];
+    var tempArrayTeams = [];
+    var tempArrayTeamType = [];
+    var sixes = [];
 
-    for (var i = 0; i < idArray.length; i++) {
-      url = "http://api.etf2l.org/player/" + idArray[i] + ".json";
-      xhr.open("GET", url, true);
-      xhr.responseType = "json"
-      xhr.send();
-      xhr.onload = function () {
-        if (xhr.response.status.code != 404) {
-          if (xhr.response.player.teams == null) {
-            divArray[i] = "noTeam";
-          } else {
-            tempArrayTeams = xhr.response.player.teams;
-            for (var o = 0; o < tempArrayTeams.length; o++) {
-              tempArrayTeamType = xhr.response.player.teams[o].type;
-              if (tempArrayTeamType == "6on6") {
-                //Done Till Here
-                sixes = true
-                console.log(xhr.response.player);
-                console.log(Object.keys(xhr.response.player.teams[o].competitions));
-              }
+    for (let i = 0; i < idArray.length; i++) {
+        (function(i) {
+            url[i] = "http://api.etf2l.org/player/" + idArray[i] + ".json";
+            xhr[i] = new XMLHttpRequest();
+            xhr[i].open("GET", url[i], true);
+            xhr[i].responseType = "json"
+            xhr[i].send();
+            xhr[i].onload = function() {
+                sixes[i] = false;
+                if (xhr[i].response.status.code != 404) {
+                    if (xhr[i].response.player.teams == null) {
+                        divArray[i] = "noTeam";
+                    } else {
+                        tempArrayTeams[i] = xhr[i].response.player.teams;
+                        for (let o = 0; o < tempArrayTeams[i].length; o++) {
+                            tempArrayTeamType[i] = xhr[i].response.player.teams[o].type;
+                            if (tempArrayTeamType[i] == "6on6") {
+                                sixes[i] = true
+                                if (xhr[i].response.player.teams[o].competitions != null) {
+                                    console.log(Object.keys(xhr[i].response.player.teams[o].competitions));
+                                    divArray[i] = "DIV";
+                                } else {
+                                    divArray[i] = "noMatches";
+                                }
+                            }
+                        }
+                        if (sixes[i] == false) {
+                            divArray[i] = "noTeam";
+                        }
+                    }
+                } else {
+                    divArray[i] = "noETF2L";
+                }
             }
-            if (sixes == false) {
-              divArray[i] = "noTeam";
+            xhr[i].onerror = function() {
+                divArray[i] = "error"
             }
-          }
-        } else {
-          divArray[i] = "noETF2L";
-        }
-      }
-        xhr.onerror = function () {
-        divArray[i] = "error"
-      }
+        })(i);
     }
+    console.log(divArray)
 }
