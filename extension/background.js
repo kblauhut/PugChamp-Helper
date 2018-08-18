@@ -52,8 +52,15 @@ function etf2lAPI(idArray) {
                             if (tempArrayTeamType[i] == "6on6") {
                                 sixes[i] = true
                                 if (xhr[i].response.player.teams[o].competitions != null) {
-                                    console.log(Object.keys(xhr[i].response.player.teams[o].competitions));
-                                    divArray[i] = "DIV";
+                                    let toIntArray = Object.keys(xhr[i].response.player.teams[o].competitions).map(Number);
+                                    let maxInt = Math.max.apply(null, toIntArray);
+                                    let tempDiv = xhr[i].response.player.teams[o].competitions[maxInt].division.name;
+                                    if (tempDiv != null) {
+                                        divArray[i] = tempDiv;
+                                    } else {
+                                        divArray[i] = "noSeason"
+                                    }
+
                                 } else {
                                     divArray[i] = "noMatches";
                                 }
