@@ -41,19 +41,21 @@ function etf2lAPI(idArray) {
       xhr.send();
       xhr.onload = function () {
         if (xhr.response.status.code != 404) {
-          if (xhr.response.player.teams = null) {
-            divArray[i] = "noETF2L";
+          if (xhr.response.player.teams == null) {
+            divArray[i] = "noTeam";
           } else {
             tempArrayTeams = xhr.response.player.teams;
             for (var o = 0; o < tempArrayTeams.length; o++) {
               tempArrayTeamType = xhr.response.player.teams[o].type;
-              console.log(tempArrayTeamType);
               if (tempArrayTeamType == "6on6") {
                 //Done Till Here
                 sixes = true
-                console.log(xhr.response.player.name);
-                console.log(xhr.response.player.teams[o].competitions);
+                console.log(xhr.response.player);
+                console.log(Object.keys(xhr.response.player.teams[o].competitions));
               }
+            }
+            if (sixes == false) {
+              divArray[i] = "noTeam";
             }
           }
         } else {
@@ -64,5 +66,4 @@ function etf2lAPI(idArray) {
         divArray[i] = "error"
       }
     }
-    console.log(divArray);
 }
