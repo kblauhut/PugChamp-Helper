@@ -1,19 +1,22 @@
 document.addEventListener("loaded", function(event) {
-    let playersAdded = document.getElementsByClassName("player  style-scope pugchamp-launchpad x-scope paper-icon-item-0");
+    let playersAdded = document.getElementsByClassName("player style-scope pugchamp-launchpad x-scope paper-icon-item-0");
     let idArray = findIds(playersAdded);
-    let packagedArray = apiRequest(idArray);
+    apiRequest(idArray, playersAdded);
 });
 
-function apiRequest(idList) {
-    chrome.runtime.sendMessage({message: "request", idArray: idList}, function(response) {
- });
+function apiRequest(idArray, playersAdded) {
+  let port = chrome.runtime.connect({name: "main"});
+  port.postMessage({status: "request", idArray: idArray});
+  port.onMessage.addListener(function(msg) {
+    updateDom(msg.user, playersAdded)
+  });
 }
 
 function findIds(playersAdded) {
     let idArray = [];
 
-    for (var x = 0; x < playersAdded.length; x++) {
-        let id = playersAdded[x].children[1].firstElementChild.getAttribute("href").substring(8);
+    for (var i = 0; i < playersAdded.length; i++) {
+        let id = playersAdded[i].children[1].firstElementChild.getAttribute("href").substring(8);
         if (! idArray.includes(id)) {
             idArray.push(id);
         }
@@ -21,20 +24,42 @@ function findIds(playersAdded) {
     return idArray;
 }
 
-/*function colorScript(){
-const colorPrem = "#FFEA32";
-const colorD1 = "#EB4B4B";
-const colorD2 = "#D32CE6";
-const colorMid = "#8847FF";
-const colorLow = "#4B69FF";
-const colorOpen = "#5E98D9";
-const colorNoDiv = "#B0C3D9";
+function updateDom(userData, playersAdded) {
+  const colorPrem = "#EB4B4B";
+  const colorD1 = "#D32CE6";
+  const colorD2 = "#8847FF";
+  const colorMid = "#4B69FF";
+  const colorLow = "#5E98D9";
+  const colorOpen = "#B0C3D9";
+  let id;
 
-    for (var x = 0; x < playersAdded.length; x++) {
-        playersAdded[x].style.color = colorLow;
+  for (var i = 0; i < playersAdded.length; i++) {
+    id = playersAdded[i].children[1].firstElementChild.getAttribute("href").substring(8);
+    if (userData.id == id && userData.registered) {
+      updateColor(userData.data.division, playersAdded[i])
     }
+  }
 
-    console.log(playersAdded);
-    console.log(playersAdded.length);
+  function updateColor(div, element) {
+    switch(div) {
+    case 0:
+        element.style.color = colorPrem;
+        break;
+    case 1:
+        element.style.color = colorD1;
+        break;
+    case 2:
+        element.style.color = colorD2;
+        break;
+    case 3:
+        element.style.color = colorMid;
+        break;
+    case 4:
+        element.style.color = colorLow;
+        break;
+    case 5:
+        element.style.color = colorOpen;
+        break;
+      }
+  }
 }
-*/

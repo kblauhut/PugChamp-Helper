@@ -1,6 +1,5 @@
 chrome.runtime.onInstalled.addListener(function() {
   console.log("onInstalled function called.");
-  // TODO: Download player data from server.
 
   chrome.storage.sync.set({colorCoding: true, nameSubstitution: true}, function() {
       console.log("variables 'colorCoding' and nameSubstitution set to true. Should be accessible from anywhere in the extension now.");
@@ -13,71 +12,79 @@ chrome.runtime.onInstalled.addListener(function() {
   });
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.message == "request") {
-      var idArray = request.idArray;
-      var divArray = etf2lAPI(idArray);
-    } else if (request.message == "update") {
-
+chrome.runtime.onConnect.addListener(function(port) {
+  port.onMessage.addListener(function(msg) {
+    if (msg.status == "request"){
+      for (var i = 0; i < msg.idArray.length; i++) {
+        returnData(msg.idArray[i], port);
+      }
     }
-
+  });
 });
 
-function etf2lAPI(idArray) {
-    var xhr = [];
-    var divArray = [];
-    var nameArray = [];
-    var teamNameArray = [];
-    var url = [];
-    var tempArrayTeams = [];
-    var tempArrayTeamType = [];
-    var sixes = [];
-
-    for (let i = 0; i < idArray.length; i++) {
-        (function(i) {
-            url[i] = "http://api.etf2l.org/player/" + idArray[i] + ".json";
-            xhr[i] = new XMLHttpRequest();
-            xhr[i].open("GET", url[i], true);
-            xhr[i].responseType = "json"
-            xhr[i].send();
-            xhr[i].onload = function() {
-                sixes[i] = false;
-                if (xhr[i].response.status.code != 404) {
-                    if (xhr[i].response.player.teams == null) {
-                        divArray[i] = "noTeam";
-                    } else {
-                        tempArrayTeams[i] = xhr[i].response.player.teams;
-                        for (let o = 0; o < tempArrayTeams[i].length; o++) {
-                            tempArrayTeamType[i] = xhr[i].response.player.teams[o].type;
-                            if (tempArrayTeamType[i] == "6on6") {
-                                sixes[i] = true
-                                if (xhr[i].response.player.teams[o].competitions != null) {
-                                    let toIntArray = Object.keys(xhr[i].response.player.teams[o].competitions).map(Number);
-                                    let maxInt = Math.max.apply(null, toIntArray);
-                                    let tempDiv = xhr[i].response.player.teams[o].competitions[maxInt].division.name;
-                                    if (tempDiv != null) {
-                                        divArray[i] = tempDiv;
-                                    } else {
-                                        divArray[i] = "noSeason"
-                                    }
-
-                                } else {
-                                    divArray[i] = "noMatches";
-                                }
-                            }
-                        }
-                        if (sixes[i] == false) {
-                            divArray[i] = "noTeam";
-                        }
-                    }
-                } else {
-                    divArray[i] = "noETF2L";
-                }
-            }
-            xhr[i].onerror = function() {
-                divArray[i] = "error"
-            }
-        })(i);
+async function returnData(id, port) {
+    let userURL = "http://api.etf2l.org/player/" + id;
+    let resultURL = "http://api.etf2l.org/player/" + id + "/results/1?since=0";
+    let userJSON = await request(userURL);
+    if (userJSON.status.code != 404 && userJSON.status.code != 500) {
+      let resultJSON = await request(resultURL);
+      let name = userJSON.player.name;
+      let team = getTeam(resultJSON);
+      let division = getDiv(resultJSON);
+      userData = {id: id, data: {name: name, team: team, division: division}, registered: true}
+    } else {
+      userData = {id: id, registered: false};
     }
-    console.log(divArray)
+    port.postMessage({user: userData});
+}
+
+function request(url) {
+  return new Promise(resolve => {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "json";
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.send();
+    xhr.onload = function() {
+    resolve(xhr.response);
+    }
+  });
+}
+
+function getTeam(resultJSON) {
+  let clan1;
+  let clan2;
+  let tier;
+  let category;
+  if (resultJSON.results != null) {
+    for (var i = 0; i < resultJSON.results.length; i++) {
+      clan1 = resultJSON.results[i].clan1;
+      clan2 = resultJSON.results[i].clan2;
+      category = resultJSON.results[i].competition.category;
+      tier = resultJSON.results[i].division.tier;
+      if (category == "6v6 Season" && tier != null) {
+        if (clan1.was_in_team == 1) {
+          return clan1.name;
+        } else if (clan2.was_in_team == 1) {
+          return clan2.name;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function getDiv(resultJSON) {
+  let tier;
+  let category;
+  if (resultJSON.results != null) {
+    for (var i = 0; i < resultJSON.results.length; i++) {
+      tier = resultJSON.results[i].division.tier;
+      category = resultJSON.results[i].competition.category;
+      if (category == "6v6 Season" && tier != null) {
+        return resultJSON.results[i].division.tier;
+      }
+    }
+  }
+  return null;
 }
