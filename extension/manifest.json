@@ -22,7 +22,7 @@
         "http://eu.pug.champ.gg/*"
       ],
       "js":[
-        "scriptInject.js"
+        "src/contentscripts/eu/main.js"
       ],
       "run_at":"document_end"
     }

@@ -6,16 +6,21 @@ document.addEventListener("loaded", function(event) {
 
 function apiRequest(idArray, playersAdded) {
   let port = chrome.runtime.connect({name: "main"});
+  let count = 0;
   port.postMessage({status: "request", idArray: idArray});
   port.onMessage.addListener(function(msg) {
-    updateDom(msg.user, playersAdded)
+    updateDom(msg.user, playersAdded);
+    count++;
+    if (count == idArray.length) {
+      //sortElements();
+    }
   });
 }
 
 function findIds(playersAdded) {
     let idArray = [];
 
-    for (var i = 0; i < playersAdded.length; i++) {
+    for (let i = 0; i < playersAdded.length; i++) {
         let id = playersAdded[i].children[1].firstElementChild.getAttribute("href").substring(8);
         if (! idArray.includes(id)) {
             idArray.push(id);
@@ -33,32 +38,46 @@ function updateDom(userData, playersAdded) {
   const colorOpen = "#B0C3D9";
   let id;
 
-  for (var i = 0; i < playersAdded.length; i++) {
+  for (let i = 0; i < playersAdded.length; i++) {
     id = playersAdded[i].children[1].firstElementChild.getAttribute("href").substring(8);
     if (userData.id == id && userData.registered) {
-      updateColor(userData.data.division, playersAdded[i])
+      updateElements(userData.data.division, playersAdded[i].getElementsByClassName("style-scope pugchamp-launchpad")[0]);
+      if (userData.data.division == null)
+      updateElements(6, playersAdded[i].getElementsByClassName("style-scope pugchamp-launchpad")[0]);
+    } else if (userData.registered == false) {
+      updateElements(6, playersAdded[i].getElementsByClassName("style-scope pugchamp-launchpad")[0]);
     }
   }
 
-  function updateColor(div, element) {
+  function updateElements(div, element) {
     switch(div) {
     case 0:
         element.style.color = colorPrem;
+        element.setAttribute("division", "0");
         break;
     case 1:
         element.style.color = colorD1;
+        element.setAttribute("division", "1");
         break;
     case 2:
         element.style.color = colorD2;
+        element.setAttribute("division", "2");
         break;
     case 3:
         element.style.color = colorMid;
+        element.setAttribute("division", "3");
         break;
     case 4:
         element.style.color = colorLow;
+        element.setAttribute("division", "4");
         break;
     case 5:
         element.style.color = colorOpen;
+        element.setAttribute("division", "5");
+        break;
+    case 6:
+        element.style.color = colorOpen;
+        element.setAttribute("division", "6");
         break;
       }
   }

@@ -1,16 +1,24 @@
 chrome.runtime.onInstalled.addListener(function() {
-  console.log("onInstalled function called.");
-
-  chrome.storage.sync.set({colorCoding: true, nameSubstitution: true}, function() {
-      console.log("variables 'colorCoding' and nameSubstitution set to true. Should be accessible from anywhere in the extension now.");
+  let colors = loadSettings("/res/data/colors.json");
+  let elements = loadSettings("/res/data/elements.json");
+  chrome.storage.local.set({colors: colors, elements: elements}, function() {
     });
-
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
         actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
 });
+
+function loadSettings(url) {
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.send(null);
+  if (xhr.status === 200) {
+    return JSON.parse(xhr.responseText);
+  }
+}
+
 
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
