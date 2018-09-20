@@ -1,8 +1,8 @@
 {
   "manifest_version":2,
   "name":"PugChamp Helper",
-  "description":"PugChamp ETF2L division and username integration.",
-  "version":"1.0",
+  "description":"Beta version! PugChamp ETF2L division and username integration.",
+  "version":"0.9",
   "permissions":[
     "declarativeContent",
     "storage",
