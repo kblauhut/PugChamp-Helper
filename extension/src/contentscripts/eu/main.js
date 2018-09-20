@@ -6,10 +6,11 @@ chrome.storage.local.get(["colors", "elementquery"], function(result) {
   colors = result.colors;
   elementquery = result.elementquery;
   let tables = document.getElementsByClassName(elementquery.table);
+  let allTables = document.getElementsByClassName(elementquery.allTables);
 
   document.addEventListener("loaded", function(event) {
+    updateTable(allTables[0]);
     for (let i = 0; i < tables.length; i++) {
-      updateTable(tables[i]);
       addMutationObserver(tables[i], i)
     }
   });
@@ -108,7 +109,7 @@ function getIds(targetTable) {
 
     for (let i = 0; i < targetTable.length; i++) {
       id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
-        if (! cachedIDs.includes(id)) {
+        if (! cachedIDs.includes(id) && ! idArray.includes(id)) {
             idArray.push(id);
         }
     }
