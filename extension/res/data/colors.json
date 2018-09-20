@@ -1,10 +1,11 @@
 {
   "default":{
-    "colorPrem": "#EB4B4B",
-    "colorD1": "#D32CE6",
-    "colorD2": "#8847FF",
-    "colorMid": "#4B69FF",
-    "colorLow": "#5E98D9",
-    "colorOpen": "#B0C3D9"
+    "prem": "#EB4B4B",
+    "div1": "#D32CE6",
+    "div2": "#8847FF",
+    "mid": "#4B69FF",
+    "low": "#5E98D9",
+    "open": "#B0C3D9",
+    "null": "#B0C3D9"
   }
 }
