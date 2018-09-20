@@ -1,5 +1,6 @@
 var colors;
 var elementquery;
+requestCache = [];
 
 chrome.storage.local.get(["colors", "elementquery"], function(result) {
   colors = result.colors;
@@ -36,9 +37,20 @@ function updateTable(targetTable) {
   let elements = targetTable.getElementsByClassName(elementquery.playerElement);
   let idArray = getIds(elements);
   let elementID;
+  let index;
+
+  for (var i = 0; i < elements.length; i++) {
+    elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
+    index = requestCache.findIndex(cache=> cache.id === elementID)
+    if (index != -1 && requestCache[index].registered) {
+      updateUser(elements[i], requestCache[index].data.division)
+    }
+  }
+
   let port = chrome.runtime.connect({name: "main"});
   port.postMessage({status: "request", idArray: idArray});
   port.onMessage.addListener(function(msg) {
+    requestCache.push(msg.user);
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
       if (msg.user.id == elementID && msg.user.registered) {
@@ -87,10 +99,16 @@ function sortTable(targetTable) {
 
 function getIds(targetTable) {
     let idArray = [];
+    let cachedIDs = [];
+    let id;
+
+    for (var i = 0; i < requestCache.length; i++) {
+      cachedIDs.push(requestCache[i].id);
+    }
 
     for (let i = 0; i < targetTable.length; i++) {
-        let id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
-        if (! idArray.includes(id)) {
+      id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
+        if (! cachedIDs.includes(id)) {
             idArray.push(id);
         }
     }
