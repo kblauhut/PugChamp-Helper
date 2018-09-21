@@ -2,11 +2,6 @@ chrome.runtime.onInstalled.addListener(function() {
   let colors = loadSettings("/res/data/colors.json");
   let elementquery = loadSettings("/res/data/elementquery.json");
   chrome.storage.local.set({colors: colors, elementquery: elementquery}, function() {
-    });
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-    chrome.declarativeContent.onPageChanged.addRules([{
-        actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
   });
 });
 
