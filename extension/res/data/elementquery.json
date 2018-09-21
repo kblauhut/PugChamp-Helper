@@ -4,5 +4,6 @@
   "playerElement": "player style-scope pugchamp-launchpad x-scope paper-icon-item-0",
   "playerText": "style-scope pugchamp-launchpad",
   "draftAllTables": "horizontal layout wrap style-scope pugchamp-draft",
-  "draftPlayerElement": "player style-scope pugchamp-draft x-scope paper-icon-item-0" 
+  "draftPlayerElement": "player style-scope pugchamp-draft x-scope paper-icon-item-0",
+  "draftPlayerText": "flex style-scope pugchamp-draft"
 }

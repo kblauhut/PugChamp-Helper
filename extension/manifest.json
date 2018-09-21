@@ -18,11 +18,21 @@
   "content_scripts":[
     {
       "matches":[
-        "https://eu.pug.champ.gg/*",
-        "http://eu.pug.champ.gg/*"
+        "https://eu.pug.champ.gg/",
+        "http://eu.pug.champ.gg/"
       ],
       "js":[
         "src/contentscripts/eu/main.js"
+      ],
+      "run_at":"document_end"
+    },
+    {
+      "matches":[
+        "https://eu.pug.champ.gg/player/*",
+        "http://eu.pug.champ.gg/player/*"
+      ],
+      "js":[
+        "src/contentscripts/eu/profile.js"
       ],
       "run_at":"document_end"
     }
