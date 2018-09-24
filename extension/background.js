@@ -38,6 +38,7 @@ async function returnData(id, port) {
     } else {
       userData = {id: id, registered: false};
     }
+    console.log("req made");
     port.postMessage({user: userData});
 }
 
@@ -83,9 +84,15 @@ function getDiv(resultJSON) {
   if (resultJSON.results != null) {
     for (var i = 0; i < resultJSON.results.length; i++) {
       tier = resultJSON.results[i].division.tier;
+      tierName = resultJSON.results[i].division.name;
       category = resultJSON.results[i].competition.category;
       if (category == "6v6 Season" && tier != null) {
-        return resultJSON.results[i].division.tier;
+        if (tier == 2) {
+          if (tierName.includes("Division 2")) return 2;
+          return 3;
+        }
+        if(tier >= 3) return tier + 1;
+        return tier;
       }
     }
   }

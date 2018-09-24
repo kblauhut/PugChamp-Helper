@@ -2,12 +2,15 @@
   "manifest_version":2,
   "name":"PugChamp Helper",
   "description":"Beta version! PugChamp ETF2L division and username integration.",
-  "version":"0.91",
+  "version":"0.92",
   "permissions":[
     "declarativeContent",
     "storage",
     "http://api.etf2l.org/*",
     "https://api.etf2l.org/*"
+  ],
+  "web_accessible_resources": [
+    "res/css/divTag.css"
   ],
   "background":{
     "scripts":[

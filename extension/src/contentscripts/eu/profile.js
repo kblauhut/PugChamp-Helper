@@ -3,7 +3,7 @@ document.addEventListener("loaded", function(event) {
   let buttonOuterHTML = document.createElement("a");
   let buttonInnerHTML = main.getElementsByClassName("link x-scope paper-button-0")[1];
   buttonInnerHTML = buttonInnerHTML.cloneNode(true);
-  let etf2lButton = main.appendChild(buttonOuterHTML);
+  main.appendChild(buttonOuterHTML);
   buttonOuterHTML.className = "button";
   buttonOuterHTML.setAttribute("href", getETF2LProfileUrl())
   buttonInnerHTML.innerText = "ETF2L Profile";
