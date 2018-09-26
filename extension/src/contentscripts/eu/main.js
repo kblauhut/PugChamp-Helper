@@ -74,7 +74,7 @@ function updateTable(targetTable) {
     if (elementID != null && elementID != undefined) {
       index = requestCache.findIndex(cache=> cache.id === elementID)
       if (index != -1 && requestCache[index].registered) {
-        updateUser(elements[i], requestCache[index].data.division)
+        updateUser(elements[i], requestCache[index].data.division, requestCache[index].data.etf2lID)
       }
     }
   }
@@ -87,19 +87,21 @@ function updateTable(targetTable) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
       if (elementID != null && elementID != undefined) {
         if (msg.user.id == elementID && msg.user.registered) {
-          updateUser(elements[i], msg.user.data.division)
+          updateUser(elements[i], msg.user.data.division, msg.user.data.etf2lID)
         }
       }
     }
   });
 }
 
-function updateUser(targetElement, div) {
+function updateUser(targetElement, div, id) {
+  let href = "http://etf2l.org/forum/user/" + id;
   let tag = targetElement.getElementsByClassName("etf2lDivTag")[0];
   if (tag == null) {
     tag = document.createElement("a");
     tag.className = "etf2lDivTag";
-    targetElement.appendChild(tag);
+    tag.setAttribute("href", href);
+    targetElement.firstElementChild.appendChild(tag);
     tag.style.color = "black";
   }
 
@@ -130,7 +132,7 @@ function updateUser(targetElement, div) {
       break;
   case null:
       tag.style.background = colors.default.null;
-      tag.innerText = "-"
+      tag.innerText = "NERD"
       break;
     }
 }

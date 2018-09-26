@@ -32,9 +32,10 @@ async function returnData(id, port) {
     if (userJSON.status.code != 404 && userJSON.status.code != 500) {
       let resultJSON = await request(resultURL);
       let name = userJSON.player.name;
+      let etf2lID = userJSON.player.id;
       let team = getTeam(resultJSON);
       let division = getDiv(resultJSON);
-      userData = {id: id, data: {name: name, team: team, division: division}, registered: true}
+      userData = {id: id, data: {name: name, team: team, division: division, etf2lID: etf2lID}, registered: true}
     } else {
       userData = {id: id, registered: false};
     }
