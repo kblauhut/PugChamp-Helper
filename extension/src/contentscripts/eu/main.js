@@ -17,10 +17,7 @@ chrome.storage.local.get(["colors", "elementquery"], function(result) {
     document.head.appendChild(style);
 
     if (draft[0].attributes.length < 2) {
-      let draftTables = document.getElementsByClassName(elementquery.draftTables);
-      for (let i = 0; i < draftTables.length; i++) {
-        updateTable(draftTables[i]);
-      }
+        updateTable(draft[0]);
     }
     updateTable(allTables[0]);
     addMutationObserver(draft[0], "draft");
@@ -37,7 +34,7 @@ function addMutationObserver(target, type) {
       if (type == "added") {
         addedMutation(mutation, target);
       } else {
-        draftMutation(mutation, target);
+        draftMutation(target);
       }
     });
   });
@@ -52,12 +49,13 @@ function addMutationObserver(target, type) {
     }
   }
 
-  function draftMutation(mutation) {
-    let draftTables = document.getElementsByClassName(elementquery.draftTables);
-    for (let i = 0; i < draftTables.length; i++) {
-      updateTable(draftTables[i]);
+  function draftMutation(target) {
+    setTimeout(function() {
+      if (target.attributes.length < 2) {
+          updateTable(target);
+        }
+      }, 200);
     }
-  }
 }
 
 function updateTable(targetTable) {
@@ -72,7 +70,8 @@ function updateTable(targetTable) {
 
   for (var i = 0; i < elements.length; i++) {
     elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
-    if (elementID != null || elementID != undefined) {
+    console.log(elementID);
+    if (elementID != null && elementID != undefined) {
       index = requestCache.findIndex(cache=> cache.id === elementID)
       if (index != -1 && requestCache[index].registered) {
         updateUser(elements[i], requestCache[index].data.division)
@@ -86,7 +85,7 @@ function updateTable(targetTable) {
     requestCache.push(msg.user);
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
-      if (elementID != null || elementID != undefined) {
+      if (elementID != null && elementID != undefined) {
         if (msg.user.id == elementID && msg.user.registered) {
           updateUser(elements[i], msg.user.data.division)
         }
@@ -153,8 +152,8 @@ function getIds(targetTable) {
       id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
         if (! cachedIDs.includes(id) && ! idArray.includes(id)) {
             idArray.push(id);
+            console.log(id);
         }
     }
-    console.log(idArray);
     return idArray;
 }

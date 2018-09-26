@@ -81,12 +81,13 @@ function getTeam(resultJSON) {
 function getDiv(resultJSON) {
   let tier;
   let category;
+  let tierName;
   if (resultJSON.results != null) {
     for (var i = 0; i < resultJSON.results.length; i++) {
       tier = resultJSON.results[i].division.tier;
       tierName = resultJSON.results[i].division.name;
       category = resultJSON.results[i].competition.category;
-      if (category == "6v6 Season" && tier != null) {
+      if (category.includes("6v6 Season") && tier != null) {
         if (tier == 2) {
           if (tierName.includes("Division 2")) return 2;
           return 3;
