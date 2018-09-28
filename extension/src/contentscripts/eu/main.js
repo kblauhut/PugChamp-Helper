@@ -70,7 +70,6 @@ function updateTable(targetTable) {
 
   for (var i = 0; i < elements.length; i++) {
     elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
-    console.log(elementID);
     if (elementID != null && elementID != undefined) {
       index = requestCache.findIndex(cache=> cache.id === elementID)
       if (index != -1 && requestCache[index].registered) {

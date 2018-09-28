@@ -39,7 +39,6 @@ async function returnData(id, port) {
     } else {
       userData = {id: id, registered: false};
     }
-    console.log("req made");
     port.postMessage({user: userData});
 }
 
@@ -95,6 +94,22 @@ function getDiv(resultJSON) {
         }
         if(tier >= 3) return tier + 1;
         return tier;
+      } else if (tierName.includes("Playoffs")) {
+        if (tierName.includes("Division 1")) {
+          return 1;
+        }
+        if (tierName.includes("Division 2")) {
+          return 2;
+        }
+        if (tierName.includes("Mid")) {
+          return 3;
+        }
+        if (tierName.includes("Low")) {
+          return 4;
+        }
+        if (tierName.includes("Open")) {
+          return 5;
+        }
       }
     }
   }
