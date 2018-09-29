@@ -94,7 +94,7 @@ function getDiv(resultJSON) {
         }
         if(tier >= 3) return tier + 1;
         return tier;
-      } else if (tierName.includes("Playoffs")) {
+      } else if (tierName != null && category.includes("6v6 Season") && tierName.includes("Playoffs")) {
         if (tierName.includes("Division 1")) {
           return 1;
         }
