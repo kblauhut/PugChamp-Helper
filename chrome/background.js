@@ -14,7 +14,6 @@ function loadSettings(url) {
   }
 }
 
-
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
     if (msg.status == "request"){
@@ -86,6 +85,7 @@ function getDiv(resultJSON) {
     for (var i = 0; i < resultJSON.results.length; i++) {
       tier = resultJSON.results[i].division.tier;
       tierName = resultJSON.results[i].division.name;
+      competitionName = resultJSON.results[i].competition.name;
       category = resultJSON.results[i].competition.category;
       if (category.includes("6v6 Season") && tier != null) {
         if (tier == 2) {
@@ -94,20 +94,20 @@ function getDiv(resultJSON) {
         }
         if(tier >= 3) return tier + 1;
         return tier;
-      } else if (tierName != null && category.includes("6v6 Season") && tierName.includes("Playoffs")) {
-        if (tierName.includes("Division 1")) {
+      } else if (category.includes("6v6 Season") && competitionName.includes("Playoffs")) {
+        if (competitionName.includes("Division 1")) {
           return 1;
         }
-        if (tierName.includes("Division 2")) {
+        if (competitionName.includes("Division 2")) {
           return 2;
         }
-        if (tierName.includes("Mid")) {
+        if (competitionName.includes("Mid")) {
           return 3;
         }
-        if (tierName.includes("Low")) {
+        if (competitionName.includes("Low")) {
           return 4;
         }
-        if (tierName.includes("Open")) {
+        if (competitionName.includes("Open")) {
           return 5;
         }
       }

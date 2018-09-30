@@ -72,8 +72,12 @@ function updateTable(targetTable) {
     elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
     if (elementID != null && elementID != undefined) {
       index = requestCache.findIndex(cache=> cache.id === elementID)
-      if (index != -1 && requestCache[index].registered) {
-        updateUser(elements[i], requestCache[index].data.division, requestCache[index].data.etf2lID)
+      if (index != -1) {
+        if (requestCache[index].registered) {
+          updateUser(elements[i], requestCache[index].data.division, requestCache[index].data.etf2lID)
+        } else {
+          updateUser(elements[i], null, null)
+        }
       }
     }
   }
@@ -85,8 +89,12 @@ function updateTable(targetTable) {
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
       if (elementID != null && elementID != undefined) {
-        if (msg.user.id == elementID && msg.user.registered) {
-          updateUser(elements[i], msg.user.data.division, msg.user.data.etf2lID)
+        if (msg.user.id == elementID) {
+          if (msg.user.registered) {
+            updateUser(elements[i], msg.user.data.division, msg.user.data.etf2lID)
+          } else {
+            updateUser(elements[i], null, null)
+          }
         }
       }
     }
@@ -94,14 +102,22 @@ function updateTable(targetTable) {
 }
 
 function updateUser(targetElement, div, id) {
-  let href = "http://etf2l.org/forum/user/" + id;
   let tag = targetElement.getElementsByClassName("etf2lDivTag")[0];
+  let href = null;
+  if (id != null) href = "http://etf2l.org/forum/user/" + id;
   if (tag == null) {
     tag = document.createElement("a");
     tag.className = "etf2lDivTag";
-    tag.setAttribute("href", href);
+    if (href != null) {
+      tag.setAttribute("href", href);
+    }
     targetElement.firstElementChild.appendChild(tag);
     tag.style.color = "black";
+  } else {
+    tag.removeAttribute("href");
+    if (href != null) {
+      tag.setAttribute("href", href);
+    }
   }
 
   switch(div) {
@@ -153,7 +169,6 @@ function getIds(targetTable) {
       id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
         if (! cachedIDs.includes(id) && ! idArray.includes(id)) {
             idArray.push(id);
-            console.log(id);
         }
     }
     return idArray;
