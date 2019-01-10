@@ -14,7 +14,8 @@
   ],
   "background":{
     "scripts":[
-      "background.js"
+      "background.js",
+      "bgrequests.js"
     ],
     "persistent":false
   },
@@ -40,8 +41,8 @@
       "run_at":"document_end"
     }
   ],
-  "page_action":{
-    "default_popup":"popup.html",
+  "browser_action":{
+    "default_popup":"src/popup/popup.html",
     "default_icon":{
 
     }

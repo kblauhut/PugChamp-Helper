@@ -1,13 +1,12 @@
 var colors;
 var elementquery;
-requestCache = [];
 
 chrome.storage.local.get(["colors", "elementquery"], function(result) {
   colors = result.colors;
   elementquery = result.elementquery;
-  let draft = document.getElementsByClassName(elementquery.draft);
-  let tables = document.getElementsByClassName(elementquery.tables);
-  let allTables = document.getElementsByClassName(elementquery.allTables);
+  let draftTables = document.getElementsByClassName(elementquery.draftTables);
+  let queueTables = document.getElementsByClassName(elementquery.queueTables);
+  let queue = document.getElementsByClassName(elementquery.queue);
 
   document.addEventListener("loaded", function(event) {
     let style = document.createElement("link");
@@ -16,76 +15,56 @@ chrome.storage.local.get(["colors", "elementquery"], function(result) {
     style.href = chrome.extension.getURL("res/css/divTag.css");
     document.head.appendChild(style);
 
-    if (draft[0].attributes.length < 2) {
-        updateTable(draft[0]);
+    for (let i = 0; i < queueTables.length; i++) {
+      updateTable(queueTables[i].getElementsByClassName(elementquery.queuePlayerElement));
+      addMutationObserver(queueTables[i], "queue")
     }
-    updateTable(allTables[0]);
-    addMutationObserver(draft[0], "draft");
-    for (let i = 0; i < tables.length; i++) {
-      addMutationObserver(tables[i], "added")
+    for (let j = 0; j < draftTables.length; j++) {
+      updateTable(draftTables[j].getElementsByClassName(elementquery.draftPlayerElement));
+      addMutationObserver(draftTables[j], "draft")
     }
   });
 });
 
 function addMutationObserver(target, type) {
-  let config = {childList: true, attributes: true};
+  let config = {childList: true, attributes: true, subtree:true};
+  if (type == "draft") config = {childList: true, attributes: true, subtree: true};
+
   let observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-      if (type == "added") {
-        addedMutation(mutation, target);
+      if (type == "queue") {
+        queueMutation(mutation, target);
       } else {
-        draftMutation(target);
+        draftMutation(mutation, target);
       }
     });
   });
   observer.observe(target, config);
 
-  function addedMutation(mutation, target) {
+  function queueMutation(mutation, target) {
     if (mutation.removedNodes[0] != undefined && mutation.removedNodes[0].nodeName == "PAPER-ICON-ITEM") {
-      updateTable(target);
+      updateTable(target.getElementsByClassName(elementquery.queuePlayerElement));
     }
     if (mutation.addedNodes[1] != undefined && mutation.addedNodes[1].nodeName == "PAPER-ICON-ITEM") {
-      updateTable(target);
+      updateTable([mutation.addedNodes[1]]);
     }
   }
 
-  function draftMutation(target) {
-    setTimeout(function() {
-      if (target.attributes.length < 2) {
-          updateTable(target);
-        }
-      }, 200);
+  function draftMutation(mutation, target) {
+    if (mutation.addedNodes[1] != undefined && mutation.addedNodes[1].nodeName == "PAPER-ICON-ITEM") {
+      updateTable([mutation.addedNodes[1]]);
     }
+    if (mutation.type == "childList" && mutation.target.className == elementquery.button) {
+        updateTable([mutation.target.parentNode.parentNode]);
+    }
+  }
 }
 
-function updateTable(targetTable) {
-  let elements = targetTable.getElementsByClassName(elementquery.playerElement);
-  let draftElements = targetTable.getElementsByClassName(elementquery.draftPlayerElement);
-  if (draftElements.length != 0) {
-    elements = draftElements;
-  }
+function updateTable(elements) {
   let idArray = getIds(elements);
-  let elementID;
-  let index;
-
-  for (var i = 0; i < elements.length; i++) {
-    elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
-    if (elementID != null && elementID != undefined) {
-      index = requestCache.findIndex(cache=> cache.id === elementID)
-      if (index != -1) {
-        if (requestCache[index].registered) {
-          updateUser(elements[i], requestCache[index].data.division, requestCache[index].data.etf2lID)
-        } else {
-          updateUser(elements[i], null, null)
-        }
-      }
-    }
-  }
-
   let port = chrome.runtime.connect({name: "main"});
   port.postMessage({status: "request", idArray: idArray});
   port.onMessage.addListener(function(msg) {
-    requestCache.push(msg.user);
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
       if (elementID != null && elementID != undefined) {
@@ -152,22 +131,11 @@ function updateUser(targetElement, div, id) {
     }
 }
 
-function sortTable(targetTable) {
-  // TODO: Sort table by division.
-}
-
 function getIds(targetTable) {
     let idArray = [];
-    let cachedIDs = [];
-    let id;
-
-    for (var i = 0; i < requestCache.length; i++) {
-      cachedIDs.push(requestCache[i].id);
-    }
-
     for (let i = 0; i < targetTable.length; i++) {
-      id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
-        if (! cachedIDs.includes(id) && ! idArray.includes(id)) {
+      let id = targetTable[i].children[1].firstElementChild.getAttribute("href").substring(8);
+        if (! idArray.includes(id)) {
             idArray.push(id);
         }
     }
