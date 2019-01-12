@@ -1,4 +1,24 @@
 {
-  "colorCoding": true,
-  "nameSubstitution": true
+  "colors":{
+    "prem": "#EB4B4B",
+    "div1": "#D32CE6",
+    "div2": "#8847FF",
+    "mid": "#4B69FF",
+    "low": "#5E98D9",
+    "open": "#B0C3D9",
+    "null": "#D5D5D5"
+  },
+  "querystrings": {
+    "queue": "horizontal layout wrap style-scope pugchamp-launchpad",
+    "queueTables": "vertical layout style-scope pugchamp-launchpad",
+    "queuePlayerElement": "player style-scope pugchamp-launchpad x-scope paper-icon-item-0",
+    "draft": "style-scope pugchamp-draft",
+    "draftTables": "flex role-column style-scope pugchamp-draft",
+    "draftPlayerElement": "player style-scope pugchamp-draft x-scope paper-icon-item-0",
+    "button": "draft-choice style-scope pugchamp-draft x-scope paper-button-0"
+  },
+  "settings": {
+    "region": "eu",
+    "divTags": true
+  }
 }

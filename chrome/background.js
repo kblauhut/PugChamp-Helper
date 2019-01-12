@@ -1,15 +1,19 @@
 chrome.runtime.onInstalled.addListener(function() {
-  let colors = loadSettings("/res/data/colors.json");
-  let elementquery = loadSettings("/res/data/elementquery.json");
-  chrome.storage.local.set({colors: colors, elementquery: elementquery}, function() {
-  });
+  loadSettings();
 });
 
-function loadSettings(url) {
+function loadSettings() {
   let xhr = new XMLHttpRequest();
-  xhr.open("GET", chrome.extension.getURL(url), false);
-  xhr.send(null);
-  if (xhr.status === 200) {
-    return JSON.parse(xhr.responseText);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      let response = JSON.parse(xhr.response)
+      chrome.storage.local.set({
+        colors: response.colors,
+        querystrings: response.querystrings,
+        settings: response.settings
+      });
+    }
   }
+  xhr.open("GET", chrome.extension.getURL("/res/cfg/config.json"), true);
+  xhr.send();
 }

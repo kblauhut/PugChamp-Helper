@@ -1,13 +1,13 @@
 let colors;
-let elementquery;
+let querystrings;
 let region = document.URL.substring(document.URL.indexOf("/") + 2, document.URL.indexOf("/") + 4);
 
-chrome.storage.local.get(["colors", "elementquery"], function(result) {
+chrome.storage.local.get(["colors", "querystrings"], function(result) {
   colors = result.colors;
-  elementquery = result.elementquery;
-  let draftTables = document.getElementsByClassName(elementquery.draftTables);
-  let queueTables = document.getElementsByClassName(elementquery.queueTables);
-  let queue = document.getElementsByClassName(elementquery.queue);
+  querystrings = result.querystrings;
+  let draftTables = document.getElementsByClassName(querystrings.draftTables);
+  let queueTables = document.getElementsByClassName(querystrings.queueTables);
+  let queue = document.getElementsByClassName(querystrings.queue);
 
   document.addEventListener("loaded", function(event) {
     let style = document.createElement("link");
@@ -17,11 +17,11 @@ chrome.storage.local.get(["colors", "elementquery"], function(result) {
     document.head.appendChild(style);
 
     for (let i = 0; i < queueTables.length; i++) {
-      updateTable(queueTables[i].getElementsByClassName(elementquery.queuePlayerElement));
+      updateTable(queueTables[i].getElementsByClassName(querystrings.queuePlayerElement));
       addMutationObserver(queueTables[i], "queue")
     }
     for (let j = 0; j < draftTables.length; j++) {
-      updateTable(draftTables[j].getElementsByClassName(elementquery.draftPlayerElement));
+      updateTable(draftTables[j].getElementsByClassName(querystrings.draftPlayerElement));
       addMutationObserver(draftTables[j], "draft")
     }
   });
@@ -44,7 +44,7 @@ function addMutationObserver(target, type) {
 
   function queueMutation(mutation, target) {
     if (mutation.removedNodes[0] != undefined && mutation.removedNodes[0].nodeName == "PAPER-ICON-ITEM") {
-      updateTable(target.getElementsByClassName(elementquery.queuePlayerElement));
+      updateTable(target.getElementsByClassName(querystrings.queuePlayerElement));
     }
     if (mutation.addedNodes[1] != undefined && mutation.addedNodes[1].nodeName == "PAPER-ICON-ITEM") {
       updateTable([mutation.addedNodes[1]]);
@@ -55,7 +55,7 @@ function addMutationObserver(target, type) {
     if (mutation.addedNodes[1] != undefined && mutation.addedNodes[1].nodeName == "PAPER-ICON-ITEM") {
       updateTable([mutation.addedNodes[1]]);
     }
-    if (mutation.type == "childList" && mutation.target.className == elementquery.button) {
+    if (mutation.type == "childList" && mutation.target.className == querystrings.button) {
         updateTable([mutation.target.parentNode]);
     }
   }
@@ -102,44 +102,44 @@ function updateUser(targetElement, div, id) {
 
   switch(div) {
   case 0:
-      tag.style.background = colors.default.prem;
+      tag.style.background = colors.prem;
       tag.innerText = "PREM"
       break;
   case 1:
-      tag.style.background = colors.default.div1;
+      tag.style.background = colors.div1;
       tag.innerText = "DIV1"
       break;
   case 2:
-      tag.style.background = colors.default.div2;
+      tag.style.background = colors.div2;
       tag.innerText = "DIV2"
       break;
   case 3:
-      tag.style.background = colors.default.mid;
+      tag.style.background = colors.mid;
       tag.innerText = "MID"
       break;
   case 4:
-      tag.style.background = colors.default.low;
+      tag.style.background = colors.low;
       tag.innerText = "LOW"
       break;
   case 5:
-      tag.style.background = colors.default.open;
+      tag.style.background = colors.open;
       tag.innerText = "OPEN"
       break;
   case "esea_inv":
-      tag.style.background = colors.default.prem;
+      tag.style.background = colors.prem;
       tag.innerText = "INV"
       break;
   case "esea_im":
-      tag.style.background = colors.default.div1;
+      tag.style.background = colors.div1;
       tag.innerText = "IM"
       break;
   case "esea_open":
-      tag.style.background = colors.default.div2;
+      tag.style.background = colors.div2;
       tag.innerText = "OPEN"
       break;
 
   case null:
-      tag.style.background = colors.default.null;
+      tag.style.background = colors.null;
       tag.innerText = "NERD"
       break;
     }
