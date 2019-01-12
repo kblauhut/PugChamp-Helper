@@ -1,5 +1,6 @@
-var colors;
-var elementquery;
+let colors;
+let elementquery;
+let region = document.URL.substring(document.URL.indexOf("/") + 2, document.URL.indexOf("/") + 4);
 
 chrome.storage.local.get(["colors", "elementquery"], function(result) {
   colors = result.colors;
@@ -55,15 +56,15 @@ function addMutationObserver(target, type) {
       updateTable([mutation.addedNodes[1]]);
     }
     if (mutation.type == "childList" && mutation.target.className == elementquery.button) {
-        updateTable([mutation.target.parentNode.parentNode]);
+        updateTable([mutation.target.parentNode]);
     }
   }
 }
 
 function updateTable(elements) {
   let idArray = getIds(elements);
-  let port = chrome.runtime.connect({name: "main"});
-  port.postMessage({status: "request", idArray: idArray});
+  let port = chrome.runtime.connect({name: region});
+  port.postMessage({idArray: idArray});
   port.onMessage.addListener(function(msg) {
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild.getAttribute("href").substring(8);
@@ -124,6 +125,19 @@ function updateUser(targetElement, div, id) {
       tag.style.background = colors.default.open;
       tag.innerText = "OPEN"
       break;
+  case "esea_inv":
+      tag.style.background = colors.default.prem;
+      tag.innerText = "INV"
+      break;
+  case "esea_im":
+      tag.style.background = colors.default.div1;
+      tag.innerText = "IM"
+      break;
+  case "esea_open":
+      tag.style.background = colors.default.div2;
+      tag.innerText = "OPEN"
+      break;
+
   case null:
       tag.style.background = colors.default.null;
       tag.innerText = "NERD"

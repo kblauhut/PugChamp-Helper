@@ -7,7 +7,8 @@
     "declarativeContent",
     "storage",
     "http://api.etf2l.org/*",
-    "https://api.etf2l.org/*"
+    "https://api.etf2l.org/*",
+    "https://raw.githubusercontent.com/*"
   ],
   "web_accessible_resources": [
     "res/css/divTag.css"
@@ -22,21 +23,21 @@
   "content_scripts":[
     {
       "matches":[
-        "https://eu.pug.champ.gg/",
-        "http://eu.pug.champ.gg/"
+        "https://*.pug.champ.gg/",
+        "http://*.pug.champ.gg/"
       ],
       "js":[
-        "src/contentscripts/eu/main.js"
+        "src/contentscripts/main.js"
       ],
       "run_at":"document_end"
     },
     {
       "matches":[
-        "https://eu.pug.champ.gg/player/*",
-        "http://eu.pug.champ.gg/player/*"
+        "https://*.pug.champ.gg/player/*",
+        "http://*.pug.champ.gg/player/*"
       ],
       "js":[
-        "src/contentscripts/eu/profile.js"
+        "src/contentscripts/profile.js"
       ],
       "run_at":"document_end"
     }
