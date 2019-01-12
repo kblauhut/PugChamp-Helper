@@ -28,6 +28,7 @@ function onOpen(evt) {
 
 function onMessage(evt) {
     console.log("Message received.");
+    console.log(evt.data);
     websocket.close();
 }
 
