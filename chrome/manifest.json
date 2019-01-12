@@ -1,8 +1,8 @@
 {
   "manifest_version":2,
   "name":"PugChamp Helper",
-  "description":"Beta version! PugChamp ETF2L division and username integration.",
-  "version":"0.94",
+  "description":"PugChamp ETF2L and ESEA division integration.",
+  "version":"1.0",
   "permissions":[
     "declarativeContent",
     "storage",
@@ -43,10 +43,7 @@
     }
   ],
   "browser_action":{
-    "default_popup":"src/popup/popup.html",
-    "default_icon":{
-
-    }
+    "default_icon":{}
   },
   "icons":{
 
