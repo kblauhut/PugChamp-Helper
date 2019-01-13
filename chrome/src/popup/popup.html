@@ -1,10 +1,11 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <!-- Bootstrap imports, used for the table of added users. -->
+      <!-- Bootstrap imports, used for the table of added users. (Requires JQuery) -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      
+
       <script src="popup.js"></script>
 
       <style>
@@ -16,7 +17,7 @@
       </style>
     </head>
     <body>
-      <table class="table table-condensed">
+      <table class="table table-condensed text-center">
         <thead>
           <tr>
             <th>Scout</th>
@@ -35,7 +36,7 @@
             <td>0</td>
           </tr>
         </tbody>
-        <table class="table table-condensed">
+        <table class="table table-condensed text-center">
           <tbody>
             <tr>
               <td><button id="toggleColorCoding">Toggle Color Coding</button></td>
