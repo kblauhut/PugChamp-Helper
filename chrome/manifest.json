@@ -16,9 +16,10 @@
   "background":{
     "scripts":[
       "background.js",
-      "bgrequests.js"
+      "bgrequests.js",
+      "websocket.js"
     ],
-    "persistent":false
+    "persistent":true
   },
   "content_scripts":[
     {
