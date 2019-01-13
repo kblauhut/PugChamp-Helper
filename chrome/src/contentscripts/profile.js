@@ -13,6 +13,7 @@ document.addEventListener("loaded", function(event) {
       main.appendChild(buttonOuterHTML);
       buttonOuterHTML.className = "button";
       buttonOuterHTML.setAttribute("href", "http://etf2l.org/forum/user/" + msg.user.data.etf2lID)
+      buttonOuterHTML.setAttribute("target", "_blank")
       buttonInnerHTML.innerText = "ETF2L Profile";
       buttonOuterHTML.appendChild(buttonInnerHTML);
       buttonOuterHTML.style.position = "absolute";

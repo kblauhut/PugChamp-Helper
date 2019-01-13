@@ -90,6 +90,7 @@ function updateUser(targetElement, div, id) {
     tag.className = "etf2lDivTag";
     if (href != null) {
       tag.setAttribute("href", href);
+      tag.setAttribute("target", "_blank")
     }
     targetElement.firstElementChild.appendChild(tag);
     tag.style.color = "black";
