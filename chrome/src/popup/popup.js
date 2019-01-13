@@ -1,5 +1,7 @@
 // Contains the code for the popup user interface.
 // Users will be able to disable and enable color coding and automatic name substitutions
+console.log("Popup script activated.")
+
 let toggleColorCoding = document.getElementById('toggleColorCoding');
 let toggleNameSubstitution = document.getElementById('toggleNameSubstitution');
 
@@ -32,3 +34,8 @@ chrome.storage.sync.get('nameSubstitution', function(data) {
     console.log("namesubclicked");
   };
 });
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender) {
+    console.log("omg a msg");
+  });

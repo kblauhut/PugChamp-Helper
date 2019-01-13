@@ -12,8 +12,11 @@ function onMessage(evt) {
     if (isLaunchStatusUpdate(msg_text)){
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
         let obj = JSON.parse(msg_text);             //convert to json
+
         let class_player_dict = obj[1].playersAvailable;
         let all_players_available = obj[1].allPlayersAvailable.length;
+
+        updatePopup(class_player_dict);
         updateIcon(all_players_available);
     }
 }
@@ -33,4 +36,9 @@ function heartbeat() {
 function updateIcon(all_players_available) {
   chrome.browserAction.setBadgeBackgroundColor({color:[235, 30, 30, 230]});
   chrome.browserAction.setBadgeText({text: "" + all_players_available});
+}
+
+
+function updatePopup(class_player_dict) {
+    chrome.runtime.sendMessage(class_player_dict);
 }
