@@ -24,7 +24,7 @@ function isLaunchStatusUpdate(msg_text){
 
 function heartbeat() {
   setTimeout(function(){
-    socket.send("42[\"timesync\",{\"jsonrpc\":\"2.0\",\"id\":" + heartbeatCount + ",\"method\":\"timesync\"}]");
+    socket.send('42["timesync",{"jsonrpc":"2.0","id":" + heartbeatCount + ","method":"timesync"}]');
     heartbeatCount++;
     heartbeat()
   }, 4000);
