@@ -1,6 +1,12 @@
 <!DOCTYPE html>
   <html>
     <head>
+      <!-- Bootstrap imports, used for the table of added users. -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      
+      <script src="popup.js"></script>
+
       <style>
         button {
           height: 150px;
@@ -10,8 +16,32 @@
       </style>
     </head>
     <body>
-      <button id="toggleColorCoding">Toggle Color Coding</button>
-      <button id="toggleNameSubstitution">Toggle Name Substitution</button>
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>Scout</th>
+            <th>Roamer</th>
+            <th>Pocket</th>
+            <th>Demoman</th>
+            <th>Medic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+        <table class="table table-condensed">
+          <tbody>
+            <tr>
+              <td><button id="toggleColorCoding">Toggle Color Coding</button></td>
+              <td><button id="toggleNameSubstitution">Toggle Name Substitution</button></td>
+            </tr>
+          </tbody>
       <script src="popup.js"></script>
     </body>
   </html>
