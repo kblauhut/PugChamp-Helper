@@ -47,7 +47,7 @@
     "default_popup": "src/popup/popup.html",
     "default_icon": {}
   },
-  "content_security_policy": "script-src 'self' https://maxcdn.bootstrapcdn.com/; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://maxcdn.bootstrapcdn.com/ https://ajax.googleapis.com/; object-src 'self'",
   "icons":{
 
   }
