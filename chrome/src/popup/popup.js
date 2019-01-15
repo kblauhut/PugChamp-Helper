@@ -7,28 +7,26 @@ sendTestMessage();
 // This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
 window.onload = function () {
   let settings = getSettings();
-  let toggleColorCoding = document.getElementById('toggleColorCoding');
-  let toggleNameSubstitution = document.getElementById('toggleNameSubstitution');
+  let btnDivTags = document.getElementById('btnDivTags');
+  let btnNameSubstitution = document.getElementById('btnNameSubstitution');
 
-  toggleColorCoding.onclick = function () {
-    console.log("colorcodingclicked");
-    settings.divTags = !settings.divTags;
-    setColor(settings.divTags, toggleColorCoding);
+  btnDivTags.onclick = function () {
+    settings.btnDivTags = !settings.btnDivTags;
+    setColor(settings.btnDivTags, btnDivTags);
     setSettings();
   };
 
-  toggleNameSubstitution.onclick = function () {
-    console.log("namesubclicked");
-    settings.nameSubstitution = !settings.nameSubstitution;
-    setColor(settings.nameSubstitution, toggleNameSubstitution);
+  btnNameSubstitution.onclick = function () {
+    settings.btnNameSubstitution = !settings.btnNameSubstitution;
+    setColor(settings.btnNameSubstitution, btnNameSubstitution);
     setSettings();
   };
 
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
-      setColor(settings.divTags, toggleColorCoding);
-      setColor(settings.nameSubstitution, toggleNameSubstitution);
+      setColor(settings.btnDivTags, btnDivTags);
+      setColor(settings.btnNameSubstitution, btnNameSubstitution);
     });
   }
   function setSettings() {
