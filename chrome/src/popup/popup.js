@@ -1,8 +1,12 @@
 // Contains the code for the popup user interface.
 // Users will be able to disable and enable color coding and automatic name substitutions
-console.log("Popup script activated.")
-sendTestMessage();
 
+//load stylesheet
+let style = document.createElement("link");
+style.rel = "stylesheet";
+style.type = "text/css";
+style.href = chrome.extension.getURL("res/css/popup.css");
+document.head.appendChild(style);
 
 // This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
 window.onload = function () {
