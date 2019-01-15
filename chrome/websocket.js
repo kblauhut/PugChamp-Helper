@@ -1,17 +1,23 @@
-const socket = new WebSocket("wss://eu.pug.champ.gg/socket.io/?EIO=3&transport=websocket");
-let heartbeatCount = 1;
+let socket;
+let heartbeatCount;
 
-socket.addEventListener("open", function (event) {
-    heartbeat();
-});
+getSettings();
 
-socket.addEventListener("message", function (event) {
-    onMessage(event);
-});
+function openSocket(region) {
+  socket = new WebSocket("wss://" + region + ".pug.champ.gg/socket.io/?EIO=3&transport=websocket");
+
+  socket.addEventListener("open", function (event) {
+      heartbeat();
+  });
+
+  socket.addEventListener("message", function (event) {
+      onMessage(event);
+  });
+}
 
 function onMessage(evt) {
     let msg_text = evt.data;
-    if (isLaunchStatusUpdate(msg_text)){
+    if (msg_text.includes("launchStatusUpdated")){
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
         let obj = JSON.parse(msg_text);             //convert to json
 
@@ -23,14 +29,12 @@ function onMessage(evt) {
     }
 }
 
-function isLaunchStatusUpdate(msg_text){
-    return msg_text.includes("launchStatusUpdated");
-}
-
 function heartbeat() {
   setTimeout(function(){
-    socket.send('42["timesync",{"jsonrpc":"2.0","id":"'+ heartbeatCount +'","method":"timesync"}]');
-    heartbeatCount++;
+    if (socket.readyState = 1) {
+      socket.send('42["timesync",{"jsonrpc":"2.0","id":"'+ heartbeatCount +'","method":"timesync"}]');
+      heartbeatCount++;
+    }
     heartbeat()
   }, 4000);
 }
@@ -53,6 +57,15 @@ function updatePopup(class_player_dict) {
 //Recieving end of messages
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-      console.log(request);
+      getSettings();
     }
 );
+
+function getSettings() {
+  chrome.storage.sync.get("settings", function (data) {
+    settings = data.settings;
+    if (socket != undefined) socket.close();
+    heartbeatCount = 1;
+    openSocket(settings.region)
+  });
+}

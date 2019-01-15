@@ -2,7 +2,7 @@
 // Users will be able to disable and enable color coding and automatic name substitutions
 
 //load stylesheet
-let style = document.createElement("link");
+style = document.createElement("link");
 style.rel = "stylesheet";
 style.type = "text/css";
 style.href = chrome.extension.getURL("res/css/popup.css");
@@ -13,6 +13,27 @@ window.onload = function () {
   let settings = getSettings();
   let btnDivTags = document.getElementById('btnDivTags');
   let btnNameSubstitution = document.getElementById('btnNameSubstitution');
+  let btnRegionEU = document.getElementById('btnRegionEU');
+  let btnRegionNA = document.getElementById('btnRegionNA');
+  let btnRegionAU = document.getElementById('btnRegionAU');
+
+  btnRegionEU.onclick = function () {
+    settings.region = "eu";
+    setSettings();
+    settingsUpdated();
+  };
+
+  btnRegionNA.onclick = function () {
+    settings.region = "na";
+    setSettings();
+    settingsUpdated();
+  };
+
+  btnRegionAU.onclick = function () {
+    settings.region = "au";
+    setSettings();
+    settingsUpdated();
+  };
 
   btnDivTags.onclick = function () {
     settings.divTags = !settings.divTags;
@@ -64,11 +85,11 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-function refreshPlayerData(class_player_dict){
+function refreshPlayerData(class_player_dict) {
   //TODO use data recieved from message to update popup
 }
 
 //Send message
-function sendTestMessage(){
-  chrome.runtime.sendMessage({ greeting: "hello" });
+function settingsUpdated() {
+  chrome.runtime.sendMessage({ greetings: "hello" });
 }
