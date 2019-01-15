@@ -3,7 +3,7 @@
 console.log("Popup script activated.")
 
 
-// This has to be in a onload block, otherwise it won't find the elements.
+// This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
 window.onload = function () {
   let toggleColorCoding = document.getElementById('toggleColorCoding');
   let toggleNameSubstitution = document.getElementById('toggleNameSubstitution');
@@ -12,6 +12,7 @@ window.onload = function () {
     setColor(data.colorCoding, toggleColorCoding);
     toggleColorCoding.onclick = function () {
       console.log("colorcodingclicked");
+      sendTestMessage();
     };
   });
 
@@ -55,6 +56,8 @@ chrome.runtime.onMessage.addListener(
 function refreshPlayerData(class_player_dict){
   //TODO use data recieved from message to update popup
 }
-function sendTestMessage(class_player_dict){
+
+//Send message
+function sendTestMessage(){
   chrome.runtime.sendMessage({ greeting: "hello" });
 }
