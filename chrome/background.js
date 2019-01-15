@@ -7,7 +7,7 @@ function loadSettings() {
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       let response = JSON.parse(xhr.response)
-      chrome.storage.local.set({
+      chrome.storage.sync.set({
         colors: response.colors,
         querystrings: response.querystrings,
         settings: response.settings

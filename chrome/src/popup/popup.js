@@ -1,32 +1,41 @@
 // Contains the code for the popup user interface.
 // Users will be able to disable and enable color coding and automatic name substitutions
 console.log("Popup script activated.")
+sendTestMessage();
 
 
 // This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
 window.onload = function () {
+  let settings = getSettings();
   let toggleColorCoding = document.getElementById('toggleColorCoding');
   let toggleNameSubstitution = document.getElementById('toggleNameSubstitution');
 
-  chrome.storage.sync.get('colorCoding', function (data) {
-    setColor(data.colorCoding, toggleColorCoding);
-    toggleColorCoding.onclick = function () {
-      console.log("colorcodingclicked");
-      sendTestMessage();
-    };
-  });
+  toggleColorCoding.onclick = function () {
+    console.log("colorcodingclicked");
+    settings.divTags = !settings.divTags;
+    setColor(settings.divTags, toggleColorCoding);
+    setSettings();
+  };
 
-  chrome.storage.sync.get('nameSubstitution', function (data) {
-    setColor(data.nameSubstitution, toggleNameSubstitution);
-    toggleNameSubstitution.onclick = function () {
-      console.log("namesubclicked");
-    };
-  });
+  toggleNameSubstitution.onclick = function () {
+    console.log("namesubclicked");
+    settings.nameSubstitution = !settings.nameSubstitution;
+    setColor(settings.nameSubstitution, toggleNameSubstitution);
+    setSettings();
+  };
+
+  function getSettings() {
+    chrome.storage.sync.get("settings", function (data) {
+      settings = data.settings;
+      setColor(settings.divTags, toggleColorCoding);
+      setColor(settings.nameSubstitution, toggleNameSubstitution);
+    });
+  }
+  function setSettings() {
+    chrome.storage.sync.set({settings: settings}, function() {
+    });
+  }
 }
-
-//testing
-
-//testing
 
 function rgb(r,g,b) {
     return 'rgb(' + [(r||0),(g||0),(b||0)].join(',') + ')';
