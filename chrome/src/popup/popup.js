@@ -35,7 +35,15 @@ chrome.storage.sync.get('nameSubstitution', function(data) {
   };
 });
 
+//Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
-  function(request, sender) {
-    console.log("omg a msg");
-  });
+  function(request, sender, sendResponse) {
+    if (request.title == "class_player_dict"){
+      refreshPlayerData(request.content);
+    }
+  }
+);
+
+function refreshPlayerData(class_player_dict){
+  //TODO use data recieved from message to update popup
+}

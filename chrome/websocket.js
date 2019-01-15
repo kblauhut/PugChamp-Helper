@@ -16,7 +16,7 @@ function onMessage(evt) {
         let class_player_dict = obj[1].playersAvailable;
         let all_players_available = obj[1].allPlayersAvailable.length;
 
-        updatePopup(class_player_dict);
+        updatePopup(class_player_dict); //Send message to popup
         updateIcon(all_players_available);
     }
 }
@@ -38,7 +38,12 @@ function updateIcon(all_players_available) {
   chrome.browserAction.setBadgeText({text: "" + all_players_available});
 }
 
-
+// Send message to popup
 function updatePopup(class_player_dict) {
-    chrome.runtime.sendMessage(class_player_dict);
+    chrome.runtime.sendMessage(
+        {
+            title: "class_player_dict",
+            content: class_player_dict
+        }
+    );
 }
