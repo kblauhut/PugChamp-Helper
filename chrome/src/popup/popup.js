@@ -11,22 +11,37 @@ window.onload = function () {
   let btnNameSubstitution = document.getElementById('btnNameSubstitution');
 
   btnDivTags.onclick = function () {
+<<<<<<< HEAD
     settings.divTags = !settings.divTags;
     setColor(settings.divTags, btnDivTags);
+=======
+    settings.btnDivTags = !settings.btnDivTags;
+    setColor(settings.btnDivTags, btnDivTags);
+>>>>>>> 200043c6af44ca9fa7b9dd86d7b249cd600741f8
     setSettings();
   };
 
   btnNameSubstitution.onclick = function () {
+<<<<<<< HEAD
     settings.nameSubstitution = !settings.nameSubstitution;
     setColor(settings.nameSubstitution, btnNameSubstitution);
+=======
+    settings.btnNameSubstitution = !settings.btnNameSubstitution;
+    setColor(settings.btnNameSubstitution, btnNameSubstitution);
+>>>>>>> 200043c6af44ca9fa7b9dd86d7b249cd600741f8
     setSettings();
   };
 
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
+<<<<<<< HEAD
       setColor(settings.divTags, btnDivTags);
       setColor(settings.nameSubstitution, btnNameSubstitution);
+=======
+      setColor(settings.btnDivTags, btnDivTags);
+      setColor(settings.btnNameSubstitution, btnNameSubstitution);
+>>>>>>> 200043c6af44ca9fa7b9dd86d7b249cd600741f8
     });
   }
   function setSettings() {
