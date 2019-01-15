@@ -29,7 +29,7 @@ async function returnData(id, port) {
       requestQueue.push(id);
       if (port.name == "eu") {
         userData = await etf2lUserData(id);
-        if (userData.registered == false) userData = await eseaUserData(id);
+        if (userData.registered == false || userData.data.division == null) userData = await eseaUserData(id);
       } else if (port.name == "na") {
         userData = await eseaUserData(id);
         if (userData.registered == false || userData.data.division == null) userData = await etf2lUserData(id);

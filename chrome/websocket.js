@@ -1,11 +1,13 @@
 const socket = new WebSocket("wss://eu.pug.champ.gg/socket.io/?EIO=3&transport=websocket");
 let heartbeatCount = 1;
 
-socket.addEventListener("message", function (event) {
-    onMessage(event)
+socket.addEventListener("open", function (event) {
+    heartbeat();
 });
 
-heartbeat();
+socket.addEventListener("message", function (event) {
+    onMessage(event);
+});
 
 function onMessage(evt) {
     let msg_text = evt.data;
