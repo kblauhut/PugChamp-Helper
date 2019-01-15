@@ -49,3 +49,10 @@ function updatePopup(class_player_dict) {
         }
     );
 }
+
+//Recieving end of messages
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        console.log("Message received in bg.");
+    }
+);
