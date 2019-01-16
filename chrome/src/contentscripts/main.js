@@ -1,15 +1,16 @@
 let colors;
 let querystrings;
+let settings;
 let region = document.URL.substring(document.URL.indexOf("/") + 2, document.URL.indexOf("/") + 4);
 
-chrome.storage.local.get(["colors", "querystrings"], function(result) {
+chrome.storage.sync.get(["colors", "querystrings", "settings"], function(result) {
   colors = result.colors;
+  settings = result.settings;
   querystrings = result.querystrings;
   let draftTables = document.getElementsByClassName(querystrings.draftTables);
   let queueTables = document.getElementsByClassName(querystrings.queueTables);
   let queue = document.getElementsByClassName(querystrings.queue);
-
-  document.addEventListener("loaded", function(event) {
+  if (settings.divTags) document.addEventListener("loaded", function(event) {
     let style = document.createElement("link");
     style.rel = "stylesheet";
     style.type = "text/css";

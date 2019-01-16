@@ -19,7 +19,7 @@
   },
   "settings": {
     "region": "eu",
-    "divTags": false,
+    "divTags": true,
     "nameSubstitution": true
   }
 }

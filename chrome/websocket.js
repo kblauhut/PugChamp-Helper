@@ -4,6 +4,7 @@ let heartbeatCount;
 getSettings();
 
 function openSocket(region) {
+
   socket = new WebSocket("wss://" + region + ".pug.champ.gg/socket.io/?EIO=3&transport=websocket");
 
   socket.addEventListener("open", function (event) {
@@ -31,7 +32,7 @@ function onMessage(evt) {
 
 function heartbeat() {
   setTimeout(function(){
-    if (socket.readyState = 1) {
+    if (socket.readyState == 1) {
       socket.send('42["timesync",{"jsonrpc":"2.0","id":"'+ heartbeatCount +'","method":"timesync"}]');
       heartbeatCount++;
     }
@@ -66,6 +67,10 @@ function getSettings() {
     settings = data.settings;
     if (socket != undefined) socket.close();
     heartbeatCount = 1;
-    openSocket(settings.region)
+    if (settings == undefined) {
+      openSocket("eu")
+    } else {
+      openSocket(settings.region)
+    }
   });
 }

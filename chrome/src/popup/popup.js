@@ -12,7 +12,7 @@ document.head.appendChild(style);
 window.onload = function () {
   let settings = getSettings();
   let btnDivTags = document.getElementById('btnDivTags');
-  let btnNameSubstitution = document.getElementById('btnNameSubstitution');
+  //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById('btnRegionEU');
   let btnRegionNA = document.getElementById('btnRegionNA');
   let btnRegionAU = document.getElementById('btnRegionAU');
@@ -21,18 +21,21 @@ window.onload = function () {
     settings.region = "eu";
     setSettings();
     settingsUpdated();
+    selectRegion("eu")
   };
 
   btnRegionNA.onclick = function () {
     settings.region = "na";
     setSettings();
     settingsUpdated();
+    selectRegion("na")
   };
 
   btnRegionAU.onclick = function () {
     settings.region = "au";
     setSettings();
     settingsUpdated();
+    selectRegion("au")
   };
 
   btnDivTags.onclick = function () {
@@ -41,34 +44,48 @@ window.onload = function () {
     setSettings();
   };
 
-  btnNameSubstitution.onclick = function () {
+  /*btnNameSubstitution.onclick = function () {
     settings.nameSubstitution = !settings.nameSubstitution;
     setColor(settings.nameSubstitution, btnNameSubstitution);
     setSettings();
-  };
+  };*/
+
+  function selectRegion(region) {
+    let selected = "#4caf50";
+    let unselected = "#9E9E9E";
+
+    btnRegionEU.style.backgroundColor = unselected;
+    btnRegionNA.style.backgroundColor = unselected;
+    btnRegionAU.style.backgroundColor = unselected;
+
+    if (region == "eu") {
+      btnRegionEU.style.backgroundColor = selected;
+    } else if (region == "na") {
+      btnRegionNA.style.backgroundColor = selected;
+    } else {
+      btnRegionAU.style.backgroundColor = selected;
+    }
+  }
 
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
       setColor(settings.divTags, btnDivTags);
-      setColor(settings.nameSubstitution, btnNameSubstitution);
+      selectRegion(settings.region)
     });
   }
   function setSettings() {
+    console.log(settings);
     chrome.storage.sync.set({settings: settings}, function() {
     });
   }
 }
 
-function rgb(r,g,b) {
-    return 'rgb(' + [(r||0),(g||0),(b||0)].join(',') + ')';
-}
-
 function setColor(enabled, element){
   if (enabled){
-    element.style.backgroundColor = rgb(66, 134, 244);
+    element.style.backgroundColor = "#4caf50";
   } else {
-    element.style.backgroundColor = rgb(244, 65, 95);
+    element.style.backgroundColor = "#9E9E9E";
   }
 }
 

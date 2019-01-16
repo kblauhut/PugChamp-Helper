@@ -1,29 +1,27 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <!-- Bootstrap imports, used for the table of added users. (Requires JQuery) -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-      <script src="popup.js"></script>
-
-      <style>
-
-      </style>
     </head>
+
     <body>
-        <table class="table table-condensed text-center">
-          <tbody>
-            <tr>
-              <button id="btnRegionEU">EU</button>
-              <button id="btnRegionNA">NA</button>
-              <button id="btnRegionAU">AU</button>
-            </tr>
-          </tbody>
-        </table>
-      <button id="btnDivTags">DRAW DIVISIONS</button>
-      <button id="btnNameSubstitution">LEAGUE NAMES</button>
+      <span id="info"><span id="name">Pugchamp-Helper</span>
+      <span id="version">1.0</span></span>
+
+      <div style="text-align:center">
+        <div style="display:inline-block">
+          <button class="button outline" id="btnRegionEU">EU</button>
+          <button class="button outline" id="btnRegionNA">NA</button>
+          <button class="button outline" id="btnRegionAU">AU</button>
+        </div>
+      </div>
+
+      <button class="button" id="btnDivTags">DRAW DIVISIONS</button>
+      <!--
+      <button class="button" id="btnNameSubstitution">LEAGUE NAMES</button>
+      -->
 
       <script src="popup.js"></script>
     </body>
