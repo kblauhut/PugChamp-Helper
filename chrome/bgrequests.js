@@ -133,6 +133,9 @@ function etf2lUserData(id) {
           if (competitionName.includes("Division 1")) {
             return 1;
           }
+          if (competitionName.includes("High")) {
+            return 1;
+          }
           if (competitionName.includes("Division 2")) {
             return 2;
           }
