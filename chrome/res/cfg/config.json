@@ -20,6 +20,7 @@
   "settings": {
     "region": "eu",
     "divTags": true,
-    "nameSubstitution": true
+    "nameSubstitution": true,
+    "hideAdvertisements": true
   }
 }

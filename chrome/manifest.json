@@ -11,7 +11,8 @@
     "https://raw.githubusercontent.com/*"
   ],
   "web_accessible_resources": [
-    "res/css/divTag.css"
+    "res/css/divTag.css",
+    "res/css/hideAdvertisements.css"
   ],
   "background":{
     "scripts":[

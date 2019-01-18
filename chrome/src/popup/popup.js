@@ -12,6 +12,7 @@ document.head.appendChild(style);
 window.onload = function () {
   let settings = getSettings();
   let btnDivTags = document.getElementById('btnDivTags');
+  let btnHideAdvertisements = document.getElementById('btnHideAdvertisements');
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById('btnRegionEU');
   let btnRegionNA = document.getElementById('btnRegionNA');
@@ -44,6 +45,12 @@ window.onload = function () {
     setSettings();
   };
 
+  btnHideAdvertisements.onclick = function () {
+    settings.hideAdvertisements = !settings.hideAdvertisements;
+    setColor(settings.hideAdvertisements, btnHideAdvertisements);
+    setSettings();
+  };
+
   /*btnNameSubstitution.onclick = function () {
     settings.nameSubstitution = !settings.nameSubstitution;
     setColor(settings.nameSubstitution, btnNameSubstitution);
@@ -71,6 +78,7 @@ window.onload = function () {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
       setColor(settings.divTags, btnDivTags);
+      setColor(settings.hideAdvertisements, btnHideAdvertisements);
       selectRegion(settings.region)
     });
   }

@@ -26,6 +26,14 @@ chrome.storage.sync.get(["colors", "querystrings", "settings"], function(result)
       addMutationObserver(draftTables[j], "draft")
     }
   });
+
+  if (settings.hideAdvertisements) {
+    let style = document.createElement("link");
+    style.rel = "stylesheet";
+    style.type = "text/css";
+    style.href = chrome.extension.getURL("res/css/hideAdvertisements.css");
+    document.head.appendChild(style);
+  }
 });
 
 function addMutationObserver(target, type) {
