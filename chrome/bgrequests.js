@@ -2,6 +2,7 @@ let userDataCache = [];
 let requestQueue = [];
 let openRequests = [];
 let eseaDivJSON;
+let ozfDivJSON;
 
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
@@ -30,11 +31,15 @@ async function returnData(id, port) {
       if (port.name == "eu") {
         userData = await etf2lUserData(id);
         if (userData.registered == false || userData.data.division == null) userData = await eseaUserData(id);
+        if (userData.registered == false || userData.data.division == null) userData = await ozfUserData(id);
       } else if (port.name == "na") {
         userData = await eseaUserData(id);
         if (userData.registered == false || userData.data.division == null) userData = await etf2lUserData(id);
+        if (userData.registered == false || userData.data.division == null) userData = await ozfUserData(id);
       } else {
-        //ozfortress implementation
+        userData = await ozfUserData(id);
+        if (userData.registered == false || userData.data.division == null) userData = await eseaUserData(id);
+        if (userData.registered == false || userData.data.division == null) userData = await etf2lUserData(id);
       }
       requestQueue.splice(requestQueue.indexOf(id), 1);
       userDataCache.push(userData);
@@ -183,6 +188,40 @@ function eseaUserData(id) {
       }
       if (division.includes("Open")) {
         return "esea_open";
+      }
+    }
+    return null;
+  }
+}
+
+function ozfUserData(id) {
+  return new Promise(async resolve => {
+    let dataURL = "https://raw.githubusercontent.com/kodeeey/OzfortressDivs/master/data/ozfortress_divs.json"
+
+    if (ozfDivJSON == undefined) ozfDivJSON = await request(dataURL);
+    let division = getDiv(ozfDivJSON, id);
+    if (division != null) {
+      userData = {id: id, league: "esea", data: {division: division}, registered: true}
+    } else {
+      userData = {id: id, registered: false};
+    }
+    resolve(userData);
+  });
+
+  function getDiv(divJSON, id) {
+    let ids = Object.keys(divJSON);
+    let idPos = ids.indexOf(id)
+
+    if (idPos != -1) {
+      let division = divJSON[ids[idPos]];
+      if (division.includes("premier")) {
+        return "ozf_prem";
+      }
+      if (division.includes("intermediate")) {
+        return "ozf_im";
+      }
+      if (division.includes("open")) {
+        return "ozf_open";
       }
     }
     return null;

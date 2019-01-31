@@ -139,7 +139,18 @@ function updateUser(targetElement, div, id) {
       tag.style.background = colors.div2;
       tag.innerText = "OPEN"
       break;
-
+  case "ozf_prem":
+      tag.style.background = colors.prem;
+      tag.innerText = "PREM"
+      break;
+  case "ozf_im":
+      tag.style.background = colors.div1;
+      tag.innerText = "IM"
+      break;
+  case "ozf_open":
+      tag.style.background = colors.div2;
+      tag.innerText = "OPEN"
+      break;
   case null:
       tag.style.background = colors.null;
       tag.innerText = "NERD"
