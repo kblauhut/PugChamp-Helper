@@ -20,13 +20,13 @@ function onMessage(evt) {
     let msg_text = evt.data;
     if (msg_text.includes("launchStatusUpdated")){
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
-        let obj = JSON.parse(msg_text);             //convert to json
+        let json_info = JSON.parse(msg_text);             //convert to json
 
-        let class_player_dict = obj[1].playersAvailable;
-        let amount_of_players_available = obj[1].allPlayersAvailable.length;
+        let amount_of_players = json_info[1].allPlayersAvailable.length;
 
-        updatePopup(class_player_dict); //Send message to popup
-        updateIcon(amount_of_players_available);
+
+        sendToPopup(json_info); //Send message to popup
+        updateIcon(amount_of_players);
     }
 }
 
@@ -51,11 +51,11 @@ function updateIcon(amount_of_players_available) {
 }
 
 // Send message to popup
-function updatePopup(class_player_dict) {
+function sendToPopup(pugchamp_info) {
     chrome.runtime.sendMessage(
         {
-            title: "class_player_dict",
-            content: class_player_dict
+            title: "pugchamp_info",
+            content: pugchamp_info
         }
     );
 }

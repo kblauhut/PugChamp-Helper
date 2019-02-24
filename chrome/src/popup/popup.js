@@ -59,7 +59,7 @@ window.onload = function () {
 
 
 
-  //These onclick functions will now pass the button that needs to be selected as paramater 
+  //These onclick functions will now pass the button that needs to be selected as paramater
   btnRegionEU.onclick = function () {
     settings.region = "eu";
     setSettings();
@@ -112,17 +112,22 @@ window.onload = function () {
   }
 }
 
+
 //Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    if (request.title == "class_player_dict") {
+    if (request.title == "pugchamp_info") {
       refreshPlayerData(request.content);
     }
   }
 );
 
-function refreshPlayerData(class_player_dict) {
-  //TODO use data recieved from message to update popup
+function refreshPlayerData(json_info) {
+    let playeramount = json_info[1].allPlayersAvailable.length;
+    let rolesneededamount = json_info[1].rolesNeeded.length;
+    let captainsavailable = json_info[1].captainsAvailable.length;
+
+    
 }
 
 //Send message
