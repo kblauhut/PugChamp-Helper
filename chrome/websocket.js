@@ -23,10 +23,10 @@ function onMessage(evt) {
         let obj = JSON.parse(msg_text);             //convert to json
 
         let class_player_dict = obj[1].playersAvailable;
-        let all_players_available = obj[1].allPlayersAvailable.length;
+        let amount_of_players_available = obj[1].allPlayersAvailable.length;
 
         updatePopup(class_player_dict); //Send message to popup
-        updateIcon(all_players_available);
+        updateIcon(amount_of_players_available);
     }
 }
 
@@ -40,9 +40,14 @@ function heartbeat() {
   }, 4000);
 }
 
-function updateIcon(all_players_available) {
-  chrome.browserAction.setBadgeBackgroundColor({color:[235, 30, 30, 230]});
-  chrome.browserAction.setBadgeText({text: "" + all_players_available});
+function updateIcon(amount_of_players_available) {
+  chrome.browserAction.setBadgeText({text: "" + amount_of_players_available});
+
+  if (amount_of_players_available < 12){          //Transparancy in the colors below doesn't seem to do anything
+    chrome.browserAction.setBadgeBackgroundColor({color:[235, 30, 30, 230]}); //red
+  } else {
+    chrome.browserAction.setBadgeBackgroundColor({color:[30, 235, 30, 230]}); //green
+  }
 }
 
 // Send message to popup
