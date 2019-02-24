@@ -41,8 +41,14 @@ function heartbeat() {
 }
 
 function updateIcon(all_players_available) {
-  chrome.browserAction.setBadgeBackgroundColor({color:[235, 30, 30, 230]});
   chrome.browserAction.setBadgeText({text: "" + all_players_available});
+
+  //Make bg color green if there are more than 12 players.
+  if (all_players_available > 12){
+    chrome.browserAction.setBadgeBackgroundColor({color:[30, 235, 30, 230]}); //The transparancy value doesn't seem to be doing anything...
+  } else {
+    chrome.browserAction.setBadgeBackgroundColor({color:[235, 30, 30, 230]});
+  }
 }
 
 // Send message to popup

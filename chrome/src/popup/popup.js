@@ -112,10 +112,6 @@ window.onload = function () {
   }
 }
 
-function toggleCheckBox() {
-
-}
-
 //Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
