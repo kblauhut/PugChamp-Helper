@@ -1,8 +1,8 @@
 {
   "manifest_version":2,
   "name":"PugChamp Helper",
-  "description":"PugChamp ETF2L and ESEA division integration.",
-  "version":"1.01",
+  "description":"PugChamp ETF2L, ESEA and OzFortress division integration.",
+  "version":"1.2",
   "permissions":[
     "declarativeContent",
     "storage",
