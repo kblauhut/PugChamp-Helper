@@ -1,6 +1,12 @@
 // Contains the code for the popup user interface.
 // Users will be able to disable and enable color coding and automatic name substitutions
 
+//Colors for buttons
+const colorSelected = "#4caf50";
+const colorUnselected = "#9E9E9E";
+let regionButtonMap = {};
+
+
 //load stylesheet
 style = document.createElement("link");
 style.rel = "stylesheet";
@@ -17,80 +23,93 @@ window.onload = function () {
   let btnRegionNA = document.getElementById('btnRegionNA');
   let btnRegionAU = document.getElementById('btnRegionAU');
 
+  regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
+  let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
+
+  //functions to manipulate region buttons
+  //Remove selection class from all buttons
+  function clearSelection() {
+    for (i = 0; i < regionButtons.length; i++) {
+      unselectButton(regionButtons[i]);
+    }
+  }
+  function unselectButton(button) {
+    if (button.classList.contains('btn-success')) {
+      button.classList.remove('btn-success');
+    }
+    button.classList.add('btn-secondary');
+  }
+
+  //Change color to indicate which is selected (can also be done with bootstrap button groups, something for later?)
+  function selectRegionButton(button) {
+    clearSelection();
+
+    button.classList.add('btn-success');
+    button.classList.remove('btn-secondary');
+  }
+
+  //Set color of one button
+  function updateButton(enabled, button) {
+    unselectButton(button); //remove success and add secondary
+    if (enabled) {
+      button.classList.add('btn-success');
+      button.classList.remove('btn-secondary');
+    }
+  }
+
+
+
+  //These onclick functions will now pass the button that needs to be selected as paramater 
   btnRegionEU.onclick = function () {
     settings.region = "eu";
     setSettings();
     settingsUpdated();
-    selectRegion("eu")
+    selectRegion("eu");
   };
 
   btnRegionNA.onclick = function () {
     settings.region = "na";
     setSettings();
     settingsUpdated();
-    selectRegion("na")
+    selectRegion("na");
   };
 
   btnRegionAU.onclick = function () {
     settings.region = "au";
     setSettings();
     settingsUpdated();
-    selectRegion("au")
+    selectRegion("au");
   };
+
+
 
   btnDivTags.onclick = function () {
     settings.divTags = !settings.divTags;
-    setColor(settings.divTags, btnDivTags);
+    updateButton(settings.divTags, btnDivTags);
     setSettings();
   };
 
   /*btnNameSubstitution.onclick = function () {
     settings.nameSubstitution = !settings.nameSubstitution;
-    setColor(settings.nameSubstitution, btnNameSubstitution);
+    updateButton(settings.nameSubstitution, btnNameSubstitution);
     setSettings();
   };*/
 
   function selectRegion(region) {
-    let selected = "#4caf50";
-    let unselected = "#9E9E9E";
-
-    btnRegionEU.style.backgroundColor = unselected;
-    btnRegionNA.style.backgroundColor = unselected;
-    btnRegionAU.style.backgroundColor = unselected;
-
-    if (region == "eu") {
-      btnRegionEU.style.backgroundColor = selected;
-    } else if (region == "na") {
-      btnRegionNA.style.backgroundColor = selected;
-    } else {
-      btnRegionAU.style.backgroundColor = selected;
-    }
+    selectRegionButton(regionButtonMap[region]);
   }
 
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
-      setColor(settings.divTags, btnDivTags);
+      updateButton(settings.divTags, btnDivTags);
       selectRegion(settings.region)
     });
   }
   function setSettings() {
-    console.log(settings);
-    chrome.storage.sync.set({settings: settings}, function() {
+    chrome.storage.sync.set({ settings: settings }, function () {
     });
   }
-}
-
-function setColor(enabled, element){
-  if (enabled){
-    element.style.backgroundColor = "#4caf50";
-  } else {
-    element.style.backgroundColor = "#9E9E9E";
-  }
-}
-
-function toggleCheckBox(){
-
 }
 
 //Recieving end of Websocket to popup messages
