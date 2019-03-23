@@ -1,3 +1,9 @@
+body {
+    background-color: #2a2624;
+    color: white;
+    min-width:300px;
+}
+
 #info {
   background-color: #444;
   border: 0;
@@ -13,7 +19,9 @@
 	margin-bottom: 1em;
 }
 
+
 .button {
+  background-color: #554562;
   border-radius: 4px;
   font-weight: 600;
 	float: left;
@@ -26,13 +34,18 @@
 	border: none;
 }
 
-/* to remove blue outline from clicked buttons */
-.button:focus {outline:0;}
+/* Button when it's clicked on */
+.button:focus {
+  color: #e1b813;
+  outline: none;
+}
 
 .outline {
   min-width: 40px;
-	border: 1px solid;
-  border-radius: 10px;
   margin: 3px;
   padding: 10px;
+}
+
+.selected {
+  color: #e1b813;
 }
