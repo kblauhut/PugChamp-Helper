@@ -14,10 +14,16 @@ style.type = "text/css";
 style.href = chrome.extension.getURL("res/css/popup.css");
 document.head.appendChild(style);
 
+togglebutton = document.createElement("link");
+togglebutton.rel = "stylesheet";
+togglebutton.type = "text/css";
+togglebutton.href = chrome.extension.getURL("res/css/togglebutton.css");
+document.head.appendChild(togglebutton);
+
 // This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
 window.onload = function () {
   let settings = getSettings();
-  let btnDivTags = document.getElementById('btnDivTags');
+  let divTagToggle = document.getElementById('divTagToggle');
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById('btnRegionEU');
   let btnRegionNA = document.getElementById('btnRegionNA');
@@ -34,32 +40,25 @@ window.onload = function () {
     }
   }
   function unselectButton(button) {
-    if (button.classList.contains('btn-success')) {
-      button.classList.remove('btn-success');
+    if (button.classList.contains('selected')) {
+      button.classList.remove('selected');
     }
-    button.classList.add('btn-secondary');
+    button.classList.add('unselected');
   }
 
   //Change color to indicate which is selected (can also be done with bootstrap button groups, something for later?)
   function selectRegionButton(button) {
     clearSelection();
 
-    button.classList.add('btn-success');
-    button.classList.remove('btn-secondary');
+    button.classList.add('selected');
+    button.classList.remove('unselected');
   }
 
-  //Set color of one button
-  function updateButton(enabled, button) {
-    unselectButton(button); //remove success and add secondary
-    if (enabled) {
-      button.classList.add('btn-success');
-      button.classList.remove('btn-secondary');
-    }
+  function updateDivToggle(enabled, toggleElement){
+    $(toggleElement).prop("checked", enabled);
   }
 
-
-
-  //These onclick functions will now pass the button that needs to be selected as paramater 
+  //These onclick functions will now pass the button that needs to be selected as paramater
   btnRegionEU.onclick = function () {
     settings.region = "eu";
     setSettings();
@@ -82,10 +81,9 @@ window.onload = function () {
   };
 
 
-
-  btnDivTags.onclick = function () {
+  divTagToggle.onclick = function () {
     settings.divTags = !settings.divTags;
-    updateButton(settings.divTags, btnDivTags);
+    updateDivToggle(settings.divTags, divTagToggle);
     setSettings();
   };
 
@@ -102,7 +100,7 @@ window.onload = function () {
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
-      updateButton(settings.divTags, btnDivTags);
+      updateDivToggle(settings.divTags, divTagToggle)
       selectRegion(settings.region)
     });
   }
@@ -112,17 +110,22 @@ window.onload = function () {
   }
 }
 
+
 //Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    if (request.title == "class_player_dict") {
+    if (request.title == "pugchamp_info") {
       refreshPlayerData(request.content);
     }
   }
 );
 
-function refreshPlayerData(class_player_dict) {
-  //TODO use data recieved from message to update popup
+function refreshPlayerData(json_info) {
+    let playeramount = json_info[1].allPlayersAvailable.length;     //Amount of different players added up in total.
+    let rolesneededamount = json_info[1].rolesNeeded.length;        //If this is empty then all the roles are filled.
+    let captainsavailable = json_info[1].captainsAvailable.length;  //Amount of people added as captain
+
+
 }
 
 //Send message
