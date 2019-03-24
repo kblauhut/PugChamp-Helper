@@ -20,7 +20,7 @@ togglebutton.type = "text/css";
 togglebutton.href = chrome.extension.getURL("res/css/togglebutton.css");
 document.head.appendChild(togglebutton);
 
-// This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
+// This has to be in a onload block so it only executes when the html is loaded, otherwise the elements don't exist yet and can't be found.
 window.onload = function () {
   let settings = getSettings();
   let divTagToggle = document.getElementById('divTagToggle');
@@ -28,6 +28,12 @@ window.onload = function () {
   let btnRegionEU = document.getElementById('btnRegionEU');
   let btnRegionNA = document.getElementById('btnRegionNA');
   let btnRegionAU = document.getElementById('btnRegionAU');
+
+  let captains_amount_tablerow = document.getElementById('captains_amount');
+  let players_amount_tablerow = document.getElementById('players_amount');
+  let roles_ready_tablerow = document.getElementById('roles_ready');
+  let servers_ready_tablerow = document.getElementById('servers_ready');
+  let draft_ready_tablerow = document.getElementById('draft_ready');
 
   regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
   let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
@@ -115,17 +121,34 @@ window.onload = function () {
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.title == "pugchamp_info") {
-      refreshPlayerData(request.content);
+      setDraftStatus(request.content);
     }
   }
 );
 
-function refreshPlayerData(json_info) {
-    let playeramount = json_info[1].allPlayersAvailable.length;     //Amount of different players added up in total.
-    let rolesneededamount = json_info[1].rolesNeeded.length;        //If this is empty then all the roles are filled.
-    let captainsavailable = json_info[1].captainsAvailable.length;  //Amount of people added as captain
+function setHoldsIcons(icon, boolean_isHolding){
+  checkmark='<img src="/res/images/icons8-checkmark.svg" alt="Tick" class="img-wrap">';
+  cross='<img src="/res/images/icons8-delete-filled.svg" alt="Tick" class="img-wrap">';
 
+  if (boolean_isHolding) {
+    icon.html(checkmark);
+  } else {
+    icon.html(cross);
+  }
+}
 
+function setDraftStatus(json_info) {
+    let playeramount = json_info[1].allPlayersAvailable.length;     // Amount of different players added up in total.
+    let captainsavailable = json_info[1].captainsAvailable.length;  // Amount of people added as captain
+    let rolesneededamount = json_info[1].rolesNeeded.length;        // If this is empty then all the roles are filled.
+    let holds = json_info[1].launchHolds;
+
+    $("#captains_amount").text(captainsavailable + "/2");
+    $("#players_amount").text(playeramount + "/12");
+
+    setHoldsIcons($("#roles_ready"), ! holds.includes("availablePlayerRoles"));
+    setHoldsIcons($("#servers_ready"), ! holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
+    setHoldsIcons($("#draft_ready"), ! holds.includes("inactiveDraft"));
 }
 
 //Send message
