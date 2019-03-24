@@ -55,3 +55,7 @@ body {
 .selected {
   color: var(--pugchamp-orange);
 }
+
+.low_break {
+  line-height: 80%;
+}
