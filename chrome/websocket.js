@@ -17,7 +17,6 @@ function openSocket(region) {
 }
 
 function onMessage(evt) {
-    console.log("A message just came in from the websocket connection.");
     let msg_text = evt.data;
     if (msg_text.includes("launchStatusUpdated")){
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
@@ -50,9 +49,7 @@ function updateIcon(amount_of_players_available) {
   }
 }
 
-// Send message to popup
 function updatePopup(pugchamp_info) {
-    //In case the popup is not open
     let playeramount = pugchamp_info[1].allPlayersAvailable.length;     // Amount of different players added up in total.
     let captainsavailable = pugchamp_info[1].captainsAvailable.length;  // Amount of people added as captain
     let rolesneededamount = pugchamp_info[1].rolesNeeded.length;        // If this is empty then all the roles are filled.
@@ -71,8 +68,7 @@ function updatePopup(pugchamp_info) {
         });
 
 
-    chrome.storage.sync.set({pugchamp_info: info_dict}
-     , function () {});
+    chrome.storage.sync.set({pugchamp_info: info_dict}, function () {});
 }
 
 //Recieving end of messages

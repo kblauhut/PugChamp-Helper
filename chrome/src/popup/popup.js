@@ -39,23 +39,14 @@ window.onload = function () {
 
   let settings = getSettings();
 
-  console.log(settings);
-
-  if (settings.pugchamp_info){
-    setLaunchstatus(settings.pugchamp_info);
-  }
-
   //functions to manipulate region buttons
   //Remove selection class from all buttons
   function clearSelection() {
-    console.log("Clearing button selection.");
-    console.log(settings.pugchamp_info);
     for (i = 0; i < regionButtons.length; i++) {
       unselectButton(regionButtons[i]);
     }
   }
   function unselectButton(button) {
-    console.log("unselecting");
     if (button.classList.contains('selected')) {
       button.classList.remove('selected');
     }
@@ -83,7 +74,6 @@ window.onload = function () {
   };
 
   btnRegionNA.onclick = function () {
-    console.log("NA button clicked");
     settings.region = "na";
     setSettings();
     settingsUpdated();
@@ -119,7 +109,9 @@ window.onload = function () {
       settings = data.settings;
       updateDivToggle(settings.divTags, divTagToggle);
       selectRegion(settings.region);
-      setLaunchstatus(settings.pugchamp_info);
+    });
+    chrome.storage.sync.get("pugchamp_info", function (info_dict) {
+      setLaunchstatus(info_dict.pugchamp_info);
     });
   }
 
@@ -133,7 +125,6 @@ window.onload = function () {
 //Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    console.log("Received message.");
     if (request.title == "pugchamp_info") {
       setLaunchstatus(request.content);
     }
@@ -152,12 +143,14 @@ function setHoldsIcons(icon, boolean_isHolding){
 }
 
 function setLaunchstatus(info_dict) {
+  if (typeof info_dict !== 'undefined'){
     $("#captains_amount").text(info_dict.captainsavailable + "/2");
     $("#players_amount").text(info_dict.playeramount + "/12");
 
     setHoldsIcons($("#roles_ready"), ! info_dict.holds.includes("availablePlayerRoles"));
     setHoldsIcons($("#servers_ready"), ! info_dict.holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
     setHoldsIcons($("#draft_ready"), ! info_dict.holds.includes("inactiveDraft"));
+  }
 }
 
 //Send message

@@ -6,7 +6,7 @@ function loadSettings() {
   let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
-      let response = JSON.parse(xhr.response)
+      let response = JSON.parse(xhr.response);
       chrome.storage.sync.set({
         colors: response.colors,
         querystrings: response.querystrings,
