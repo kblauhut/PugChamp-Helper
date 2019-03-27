@@ -38,6 +38,10 @@ window.onload = function () {
   regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
   let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
 
+  if (settings.info_dict){
+    setLaunchstatus(settings.info_dict);
+  }
+
   //functions to manipulate region buttons
   //Remove selection class from all buttons
   function clearSelection() {
@@ -121,7 +125,7 @@ window.onload = function () {
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.title == "pugchamp_info") {
-      setDraftStatus(request.content);
+      setLaunchstatus(request.content);
     }
   }
 );
@@ -137,18 +141,13 @@ function setHoldsIcons(icon, boolean_isHolding){
   }
 }
 
-function setDraftStatus(json_info) {
-    let playeramount = json_info[1].allPlayersAvailable.length;     // Amount of different players added up in total.
-    let captainsavailable = json_info[1].captainsAvailable.length;  // Amount of people added as captain
-    let rolesneededamount = json_info[1].rolesNeeded.length;        // If this is empty then all the roles are filled.
-    let holds = json_info[1].launchHolds;
+function setLaunchstatus(info_dict) {
+    $("#captains_amount").text(info_dict.captainsavailable + "/2");
+    $("#players_amount").text(info_dict.playeramount + "/12");
 
-    $("#captains_amount").text(captainsavailable + "/2");
-    $("#players_amount").text(playeramount + "/12");
-
-    setHoldsIcons($("#roles_ready"), ! holds.includes("availablePlayerRoles"));
-    setHoldsIcons($("#servers_ready"), ! holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
-    setHoldsIcons($("#draft_ready"), ! holds.includes("inactiveDraft"));
+    setHoldsIcons($("#roles_ready"), ! info_dict.holds.includes("availablePlayerRoles"));
+    setHoldsIcons($("#servers_ready"), ! info_dict.holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
+    setHoldsIcons($("#draft_ready"), ! info_dict.holds.includes("inactiveDraft"));
 }
 
 //Send message

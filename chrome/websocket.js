@@ -17,6 +17,7 @@ function openSocket(region) {
 }
 
 function onMessage(evt) {
+    console.log("A message just came in from the websocket connection.");
     let msg_text = evt.data;
     if (msg_text.includes("launchStatusUpdated")){
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
@@ -25,7 +26,7 @@ function onMessage(evt) {
         let amount_of_players = json_info[1].allPlayersAvailable.length;
 
 
-        sendToPopup(json_info); //Send message to popup
+        updatePopup(json_info); //Send message to popup
         updateIcon(amount_of_players);
     }
 }
@@ -51,13 +52,28 @@ function updateIcon(amount_of_players_available) {
 }
 
 // Send message to popup
-function sendToPopup(pugchamp_info) {
-    chrome.runtime.sendMessage(
-        {
+function updatePopup(pugchamp_info) {
+    //In case the popup is not open
+    let playeramount = pugchamp_info[1].allPlayersAvailable.length;     // Amount of different players added up in total.
+    let captainsavailable = pugchamp_info[1].captainsAvailable.length;  // Amount of people added as captain
+    let rolesneededamount = pugchamp_info[1].rolesNeeded.length;        // If this is empty then all the roles are filled.
+    let holds = pugchamp_info[1].launchHolds;
+
+    info_dict = {
+      playeramount: playeramount,
+      captainsavailable: captainsavailable,
+      rolesneededamount: rolesneededamount,
+      holds: holds
+     }
+
+    chrome.runtime.sendMessage({
             title: "pugchamp_info",
-            content: pugchamp_info
-        }
-    );
+            content: info_dict
+        });
+
+
+    chrome.storage.sync.set(info_dict
+     , function () {});
 }
 
 //Recieving end of messages
