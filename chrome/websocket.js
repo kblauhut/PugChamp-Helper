@@ -23,10 +23,9 @@ function onMessage(evt) {
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
         let json_info = JSON.parse(msg_text);             //convert to json
 
+        updatePopup(json_info);
+
         let amount_of_players = json_info[1].allPlayersAvailable.length;
-
-
-        updatePopup(json_info); //Send message to popup
         updateIcon(amount_of_players);
     }
 }
@@ -72,7 +71,7 @@ function updatePopup(pugchamp_info) {
         });
 
 
-    chrome.storage.sync.set(info_dict
+    chrome.storage.sync.set({pugchamp_info: info_dict}
      , function () {});
 }
 
@@ -89,9 +88,9 @@ function getSettings() {
     if (socket != undefined) socket.close();
     heartbeatCount = 1;
     if (settings == undefined) {
-      openSocket("eu")
+      openSocket("eu");
     } else {
-      openSocket(settings.region)
+      openSocket(settings.region);
     }
   });
 }

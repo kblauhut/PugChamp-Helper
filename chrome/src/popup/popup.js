@@ -22,7 +22,6 @@ document.head.appendChild(togglebutton);
 
 // This has to be in a onload block so it only executes when the html is loaded, otherwise the elements don't exist yet and can't be found.
 window.onload = function () {
-  let settings = getSettings();
   let divTagToggle = document.getElementById('divTagToggle');
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById('btnRegionEU');
@@ -38,18 +37,25 @@ window.onload = function () {
   regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
   let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
 
-  if (settings.info_dict){
-    setLaunchstatus(settings.info_dict);
+  let settings = getSettings();
+
+  console.log(settings);
+
+  if (settings.pugchamp_info){
+    setLaunchstatus(settings.pugchamp_info);
   }
 
   //functions to manipulate region buttons
   //Remove selection class from all buttons
   function clearSelection() {
+    console.log("Clearing button selection.");
+    console.log(settings.pugchamp_info);
     for (i = 0; i < regionButtons.length; i++) {
       unselectButton(regionButtons[i]);
     }
   }
   function unselectButton(button) {
+    console.log("unselecting");
     if (button.classList.contains('selected')) {
       button.classList.remove('selected');
     }
@@ -64,11 +70,11 @@ window.onload = function () {
     button.classList.remove('unselected');
   }
 
-  function updateDivToggle(enabled, toggleElement){
-    $(toggleElement).prop("checked", enabled);
+  function updateDivToggle(isEnabled, toggleElement){
+    $(toggleElement).prop("checked", isEnabled);
   }
 
-  //These onclick functions will now pass the button that needs to be selected as paramater
+
   btnRegionEU.onclick = function () {
     settings.region = "eu";
     setSettings();
@@ -77,6 +83,7 @@ window.onload = function () {
   };
 
   btnRegionNA.onclick = function () {
+    console.log("NA button clicked");
     settings.region = "na";
     setSettings();
     settingsUpdated();
@@ -110,13 +117,15 @@ window.onload = function () {
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
-      updateDivToggle(settings.divTags, divTagToggle)
-      selectRegion(settings.region)
+      updateDivToggle(settings.divTags, divTagToggle);
+      selectRegion(settings.region);
+      setLaunchstatus(settings.pugchamp_info);
     });
   }
+
   function setSettings() {
-    chrome.storage.sync.set({ settings: settings }, function () {
-    });
+    chrome.storage.sync.set({ settings: settings }
+      , function () {});
   }
 }
 
@@ -124,6 +133,7 @@ window.onload = function () {
 //Recieving end of Websocket to popup messages
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
+    console.log("Received message.");
     if (request.title == "pugchamp_info") {
       setLaunchstatus(request.content);
     }
