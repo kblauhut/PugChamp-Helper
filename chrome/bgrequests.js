@@ -115,16 +115,16 @@ function etf2lUserData(id) {
   }
 
   function getDiv(resultJSON) {
-    let tier;
-    let category;
-    let tierName;
     if (resultJSON.results != null) {
       for (let i = 0; i < resultJSON.results.length; i++) {
-        tier = resultJSON.results[i].division.tier;
-        tierName = resultJSON.results[i].division.name;
-        competitionName = resultJSON.results[i].competition.name;
-        category = resultJSON.results[i].competition.category;
-        if (category.includes("6v6 Season") && tier != null) {
+        let tier = resultJSON.results[i].division.tier;
+        let tierName = resultJSON.results[i].division.name;
+        let competitionName = resultJSON.results[i].competition.name;
+        let category = resultJSON.results[i].competition.category;
+        let clan1 = resultJSON.results[i].clan1;
+        let clan2 = resultJSON.results[i].clan2;
+        if (category.includes("6v6 Season") && tier != null && (clan1.was_in_team == 1 || clan2.was_in_team == 1)) {
+          console.log(competitionName);
           if (tierName.includes("Division") && tier > 2) {
             return null;
           }
@@ -134,7 +134,8 @@ function etf2lUserData(id) {
           }
           if (tier >= 3) return tier + 1;
           return tier;
-        } else if (category.includes("6v6 Season") && competitionName.includes("Playoffs")) {
+        } else if (category.includes("6v6 Season") && competitionName.includes("Playoffs") && (clan1.was_in_team == 1 || clan2.was_in_team == 1)) {
+          console.log(competitionName);
           if (competitionName.includes("Division 1")) {
             return 1;
           }
