@@ -4,6 +4,7 @@ let settings;
 let region = document.URL.substring(document.URL.indexOf("/") + 2, document.URL.indexOf("/") + 4);
 
 chrome.storage.sync.get(["colors", "querystrings", "settings"], function(result) {
+
   colors = result.colors;
   settings = result.settings;
   querystrings = result.querystrings;

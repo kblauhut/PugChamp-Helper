@@ -1,3 +1,15 @@
+:root {
+  --pugchamp-orange: #e1b813;
+  --pugchamp-purple: #554562;
+  --pugchamp-black: #2a2624;
+}
+
+body {
+    background-color: var(--pugchamp-black);
+    color: white;
+    min-width:300px;
+}
+
 #info {
   background-color: #444;
   border: 0;
@@ -13,7 +25,9 @@
 	margin-bottom: 1em;
 }
 
+
 .button {
+  background-color: var(--pugchamp-purple);
   border-radius: 4px;
   font-weight: 600;
 	float: left;
@@ -26,10 +40,18 @@
 	border: none;
 }
 
+/* Button when it's clicked on */
+.button:focus {
+  color: var(--pugchamp-orange);
+  outline: none; /*remove ugly blue outline*/
+}
+
 .outline {
   min-width: 40px;
-	border: 1px solid;
-  border-radius: 3px;
   margin: 3px;
-  padding: 5px;
+  padding: 10px;
+}
+
+.selected {
+  color: var(--pugchamp-orange);
 }

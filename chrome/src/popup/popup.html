@@ -1,28 +1,40 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    </head>
+<html>
 
+<<<<<<< HEAD
     <body>
       <span id="info"><span id="name">Pugchamp-Helper</span>
       <span id="version">1.22</span></span>
+=======
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+>>>>>>> 7b053780bc3c7eaaf5914f7c79d3ff482f41417f
 
-      <div style="text-align:center">
-        <div style="display:inline-block">
-          <button class="button outline" id="btnRegionEU">EU</button>
-          <button class="button outline" id="btnRegionNA">NA</button>
-          <button class="button outline" id="btnRegionAU">AU</button>
-        </div>
+  <script src="popup.js"></script>
+</head>
+
+<body>
+  <div>
+    <span id="info"><span id="name">Pugchamp-Helper</span>
+    <span id="version">1.2</span></span>
+
+    <div style="text-align:center">
+      <span>Region select:</span>
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button class="btn button outline" id="btnRegionEU" type="button">EU</button>
+        <button class="btn button outline" id="btnRegionNA" type="button">NA</button>
+        <button class="btn button outline" id="btnRegionAU" type="button">AU</button>
       </div>
+      <br></br>
+      <span>Draw division badges:</span>
+      <label class="switch">
+        <input type="checkbox" checked id="divTagToggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+</body>
 
-      <button class="button" id="btnDivTags">DRAW DIVISIONS</button>
-      <!--
-      <button class="button" id="btnNameSubstitution">LEAGUE NAMES</button>
-      -->
-
-      <script src="popup.js"></script>
-    </body>
-  </html>
+</html>
