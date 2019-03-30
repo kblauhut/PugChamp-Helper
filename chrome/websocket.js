@@ -22,10 +22,9 @@ function onMessage(evt) {
         msg_text = msg_text.replace(/^\d+/, '');    //remove leading numbers from json
         let json_info = JSON.parse(msg_text);             //convert to json
 
+        updatePopup(json_info);
+
         let amount_of_players = json_info[1].allPlayersAvailable.length;
-
-
-        sendToPopup(json_info); //Send message to popup
         updateIcon(amount_of_players);
     }
 }
@@ -50,14 +49,26 @@ function updateIcon(amount_of_players_available) {
   }
 }
 
-// Send message to popup
-function sendToPopup(pugchamp_info) {
-    chrome.runtime.sendMessage(
-        {
+function updatePopup(pugchamp_info) {
+    let playeramount = pugchamp_info[1].allPlayersAvailable.length;     // Amount of different players added up in total.
+    let captainsavailable = pugchamp_info[1].captainsAvailable.length;  // Amount of people added as captain
+    let rolesneededamount = pugchamp_info[1].rolesNeeded.length;        // If this is empty then all the roles are filled.
+    let holds = pugchamp_info[1].launchHolds;
+
+    info_dict = {
+      playeramount: playeramount,
+      captainsavailable: captainsavailable,
+      rolesneededamount: rolesneededamount,
+      holds: holds
+     }
+
+    chrome.runtime.sendMessage({
             title: "pugchamp_info",
-            content: pugchamp_info
-        }
-    );
+            content: info_dict
+        });
+
+
+    chrome.storage.sync.set({pugchamp_info: info_dict}, function () {});
 }
 
 //Recieving end of messages
@@ -73,9 +84,9 @@ function getSettings() {
     if (socket != undefined) socket.close();
     heartbeatCount = 1;
     if (settings == undefined) {
-      openSocket("eu")
+      openSocket("eu");
     } else {
-      openSocket(settings.region)
+      openSocket(settings.region);
     }
   });
 }

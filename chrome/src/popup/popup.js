@@ -20,17 +20,24 @@ togglebutton.type = "text/css";
 togglebutton.href = chrome.extension.getURL("res/css/togglebutton.css");
 document.head.appendChild(togglebutton);
 
-// This has to be in a onload block so it only executes when the html is loaded, otherwise it can't find the elements
+// This has to be in a onload block so it only executes when the html is loaded, otherwise the elements don't exist yet and can't be found.
 window.onload = function () {
-  let settings = getSettings();
   let divTagToggle = document.getElementById('divTagToggle');
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById('btnRegionEU');
   let btnRegionNA = document.getElementById('btnRegionNA');
   let btnRegionAU = document.getElementById('btnRegionAU');
 
+  let captains_amount_tablerow = document.getElementById('captains_amount');
+  let players_amount_tablerow = document.getElementById('players_amount');
+  let roles_ready_tablerow = document.getElementById('roles_ready');
+  let servers_ready_tablerow = document.getElementById('servers_ready');
+  let draft_ready_tablerow = document.getElementById('draft_ready');
+
   regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
   let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
+
+  let settings = getSettings();
 
   //functions to manipulate region buttons
   //Remove selection class from all buttons
@@ -54,11 +61,11 @@ window.onload = function () {
     button.classList.remove('unselected');
   }
 
-  function updateDivToggle(enabled, toggleElement){
-    $(toggleElement).prop("checked", enabled);
+  function updateDivToggle(isEnabled, toggleElement){
+    $(toggleElement).prop("checked", isEnabled);
   }
 
-  //These onclick functions will now pass the button that needs to be selected as paramater
+
   btnRegionEU.onclick = function () {
     settings.region = "eu";
     setSettings();
@@ -100,13 +107,17 @@ window.onload = function () {
   function getSettings() {
     chrome.storage.sync.get("settings", function (data) {
       settings = data.settings;
-      updateDivToggle(settings.divTags, divTagToggle)
-      selectRegion(settings.region)
+      updateDivToggle(settings.divTags, divTagToggle);
+      selectRegion(settings.region);
+    });
+    chrome.storage.sync.get("pugchamp_info", function (info_dict) {
+      setLaunchstatus(info_dict.pugchamp_info);
     });
   }
+
   function setSettings() {
-    chrome.storage.sync.set({ settings: settings }, function () {
-    });
+    chrome.storage.sync.set({ settings: settings }
+      , function () {});
   }
 }
 
@@ -115,17 +126,31 @@ window.onload = function () {
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.title == "pugchamp_info") {
-      refreshPlayerData(request.content);
+      setLaunchstatus(request.content);
     }
   }
 );
 
-function refreshPlayerData(json_info) {
-    let playeramount = json_info[1].allPlayersAvailable.length;     //Amount of different players added up in total.
-    let rolesneededamount = json_info[1].rolesNeeded.length;        //If this is empty then all the roles are filled.
-    let captainsavailable = json_info[1].captainsAvailable.length;  //Amount of people added as captain
+function setHoldsIcons(icon, boolean_isHolding){
+  checkmark='<img src="/res/images/icons8-checkmark.svg" alt="Tick" class="img-wrap">';
+  cross='<img src="/res/images/icons8-delete-filled.svg" alt="Tick" class="img-wrap">';
 
+  if (boolean_isHolding) {
+    icon.html(checkmark);
+  } else {
+    icon.html(cross);
+  }
+}
 
+function setLaunchstatus(info_dict) {
+  if (typeof info_dict !== 'undefined'){
+    $("#captains_amount").text(info_dict.captainsavailable + "/2");
+    $("#players_amount").text(info_dict.playeramount + "/12");
+
+    setHoldsIcons($("#roles_ready"), ! info_dict.holds.includes("availablePlayerRoles"));
+    setHoldsIcons($("#servers_ready"), ! info_dict.holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
+    setHoldsIcons($("#draft_ready"), ! info_dict.holds.includes("inactiveDraft"));
+  }
 }
 
 //Send message
