@@ -6,7 +6,6 @@ const colorSelected = "#4caf50";
 const colorUnselected = "#9E9E9E";
 let regionButtonMap = {};
 
-
 //load stylesheet
 style = document.createElement("link");
 style.rel = "stylesheet";
@@ -21,20 +20,20 @@ togglebutton.href = chrome.extension.getURL("res/css/togglebutton.css");
 document.head.appendChild(togglebutton);
 
 // This has to be in a onload block so it only executes when the html is loaded, otherwise the elements don't exist yet and can't be found.
-window.onload = function () {
-  let divTagToggle = document.getElementById('divTagToggle');
+window.onload = function() {
+  let divTagToggle = document.getElementById("divTagToggle");
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
-  let btnRegionEU = document.getElementById('btnRegionEU');
-  let btnRegionNA = document.getElementById('btnRegionNA');
-  let btnRegionAU = document.getElementById('btnRegionAU');
+  let btnRegionEU = document.getElementById("btnRegionEU");
+  let btnRegionNA = document.getElementById("btnRegionNA");
+  let btnRegionAU = document.getElementById("btnRegionAU");
 
-  let captains_amount_tablerow = document.getElementById('captains_amount');
-  let players_amount_tablerow = document.getElementById('players_amount');
-  let roles_ready_tablerow = document.getElementById('roles_ready');
-  let servers_ready_tablerow = document.getElementById('servers_ready');
-  let draft_ready_tablerow = document.getElementById('draft_ready');
+  let captains_amount_tablerow = document.getElementById("captains_amount");
+  let players_amount_tablerow = document.getElementById("players_amount");
+  let roles_ready_tablerow = document.getElementById("roles_ready");
+  let servers_ready_tablerow = document.getElementById("servers_ready");
+  let draft_ready_tablerow = document.getElementById("draft_ready");
 
-  regionButtonMap = {"eu": btnRegionEU, "na": btnRegionNA, "au": btnRegionAU};
+  regionButtonMap = { eu: btnRegionEU, na: btnRegionNA, au: btnRegionAU };
   let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
 
   let settings = getSettings();
@@ -47,48 +46,46 @@ window.onload = function () {
     }
   }
   function unselectButton(button) {
-    if (button.classList.contains('selected')) {
-      button.classList.remove('selected');
+    if (button.classList.contains("selected")) {
+      button.classList.remove("selected");
     }
-    button.classList.add('unselected');
+    button.classList.add("unselected");
   }
 
   //Change color to indicate which is selected (can also be done with bootstrap button groups, something for later?)
   function selectRegionButton(button) {
     clearSelection();
 
-    button.classList.add('selected');
-    button.classList.remove('unselected');
+    button.classList.add("selected");
+    button.classList.remove("unselected");
   }
 
-  function updateDivToggle(isEnabled, toggleElement){
+  function updateDivToggle(isEnabled, toggleElement) {
     $(toggleElement).prop("checked", isEnabled);
   }
 
-
-  btnRegionEU.onclick = function () {
+  btnRegionEU.onclick = function() {
     settings.region = "eu";
     setSettings();
     settingsUpdated();
     selectRegion("eu");
   };
 
-  btnRegionNA.onclick = function () {
+  btnRegionNA.onclick = function() {
     settings.region = "na";
     setSettings();
     settingsUpdated();
     selectRegion("na");
   };
 
-  btnRegionAU.onclick = function () {
-    settings.region = "au";
-    setSettings();
-    settingsUpdated();
-    selectRegion("au");
-  };
+  // btnRegionAU.onclick = function () {
+  //   settings.region = "au";
+  //   setSettings();
+  //   settingsUpdated();
+  //   selectRegion("au");
+  // };
 
-
-  divTagToggle.onclick = function () {
+  divTagToggle.onclick = function() {
     settings.divTags = !settings.divTags;
     updateDivToggle(settings.divTags, divTagToggle);
     setSettings();
@@ -105,35 +102,33 @@ window.onload = function () {
   }
 
   function getSettings() {
-    chrome.storage.sync.get("settings", function (data) {
+    chrome.storage.sync.get("settings", function(data) {
       settings = data.settings;
       updateDivToggle(settings.divTags, divTagToggle);
       selectRegion(settings.region);
     });
-    chrome.storage.sync.get("pugchamp_info", function (info_dict) {
+    chrome.storage.sync.get("pugchamp_info", function(info_dict) {
       setLaunchstatus(info_dict.pugchamp_info);
     });
   }
 
   function setSettings() {
-    chrome.storage.sync.set({ settings: settings }
-      , function () {});
+    chrome.storage.sync.set({ settings: settings }, function() {});
   }
-}
-
+};
 
 //Recieving end of Websocket to popup messages
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.title == "pugchamp_info") {
-      setLaunchstatus(request.content);
-    }
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.title == "pugchamp_info") {
+    setLaunchstatus(request.content);
   }
-);
+});
 
-function setHoldsIcons(icon, boolean_isHolding){
-  checkmark='<img src="/res/images/icons8-checkmark.svg" alt="Tick" class="img-wrap">';
-  cross='<img src="/res/images/icons8-delete-filled.svg" alt="Tick" class="img-wrap">';
+function setHoldsIcons(icon, boolean_isHolding) {
+  checkmark =
+    '<img src="/res/images/icons8-checkmark.svg" alt="Tick" class="img-wrap">';
+  cross =
+    '<img src="/res/images/icons8-delete-filled.svg" alt="Tick" class="img-wrap">';
 
   if (boolean_isHolding) {
     icon.html(checkmark);
@@ -143,13 +138,22 @@ function setHoldsIcons(icon, boolean_isHolding){
 }
 
 function setLaunchstatus(info_dict) {
-  if (typeof info_dict !== 'undefined'){
+  if (typeof info_dict !== "undefined") {
     $("#captains_amount").text(info_dict.captainsavailable + "/2");
     $("#players_amount").text(info_dict.playeramount + "/12");
 
-    setHoldsIcons($("#roles_ready"), ! info_dict.holds.includes("availablePlayerRoles"));
-    setHoldsIcons($("#servers_ready"), ! info_dict.holds.includes("availableServers")); //TODO: These are wrong ATM, still have to check site to find correct name
-    setHoldsIcons($("#draft_ready"), ! info_dict.holds.includes("inactiveDraft"));
+    setHoldsIcons(
+      $("#roles_ready"),
+      !info_dict.holds.includes("availablePlayerRoles")
+    );
+    setHoldsIcons(
+      $("#servers_ready"),
+      !info_dict.holds.includes("availableServers")
+    ); //TODO: These are wrong ATM, still have to check site to find correct name
+    setHoldsIcons(
+      $("#draft_ready"),
+      !info_dict.holds.includes("inactiveDraft")
+    );
   }
 }
 

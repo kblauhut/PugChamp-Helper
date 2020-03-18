@@ -13,80 +13,98 @@ chrome.runtime.onConnect.addListener(function(port) {
 });
 
 async function returnData(id, port) {
-    let cachedIDs = [];
-    let userData;
-    let idPos;
+  let cachedIDs = [];
+  let userData;
+  let idPos;
 
-    for (let i = 0; i < userDataCache.length; i++) {
-      cachedIDs.push(userDataCache[i].id);
-    }
-    idPos = cachedIDs.indexOf(id);
+  for (let i = 0; i < userDataCache.length; i++) {
+    cachedIDs.push(userDataCache[i].id);
+  }
+  idPos = cachedIDs.indexOf(id);
 
-    if (idPos != -1) {
-      port.postMessage({user: userDataCache[idPos]});
-    } else if (requestQueue.indexOf(id) != -1) {
-      openRequests.push({id:id, port:port});
-    } else if (requestQueue.indexOf(id) == -1) {
-      requestQueue.push(id);
-      if (port.name == "eu") {
-        userData = await etf2lUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await eseaUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await ozfUserData(id);
-      } else if (port.name == "na") {
+  if (idPos != -1) {
+    port.postMessage({ user: userDataCache[idPos] });
+  } else if (requestQueue.indexOf(id) != -1) {
+    openRequests.push({ id: id, port: port });
+  } else if (requestQueue.indexOf(id) == -1) {
+    requestQueue.push(id);
+    if (port.name == "eu") {
+      userData = await etf2lUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await rglUserData(id);
+      if (userData.registered == false || userData.data.division == null)
         userData = await eseaUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await etf2lUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await ozfUserData(id);
-      } else {
-        userData = await ozfUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await eseaUserData(id);
-        if (userData.registered == false || userData.data.division == null) userData = await etf2lUserData(id);
-      }
-      requestQueue.splice(requestQueue.indexOf(id), 1);
-      userDataCache.push(userData);
-      port.postMessage({user: userData});
-      userDataUpdated(id, userData);
+      // if (userData.registered == false || userData.data.division == null)
+      //   userData = await ozfUserData(id);
+    } else if (port.name == "na") {
+      userData = await rglUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await eseaUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await etf2lUserData(id);
+      // if (userData.registered == false || userData.data.division == null)
+      //   userData = await ozfUserData(id);
+    } else {
+      // userData = await ozfUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await rglUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await eseaUserData(id);
+      if (userData.registered == false || userData.data.division == null)
+        userData = await etf2lUserData(id);
     }
+    requestQueue.splice(requestQueue.indexOf(id), 1);
+    userDataCache.push(userData);
+    port.postMessage({ user: userData });
+    userDataUpdated(id, userData);
+  }
 }
 
 function userDataUpdated(id, userData) {
   for (let i = 0; i < openRequests.length; i++) {
     if (openRequests[i].id == id) {
       let port = openRequests[i].port;
-      port.postMessage({user: userData});
+      port.postMessage({ user: userData });
       openRequests.splice(i, 1);
       i--;
     }
   }
 }
 
-function request(url) {
-  return new Promise(resolve => {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.responseType = "json";
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.send();
-    xhr.onload = function() {
-    resolve(xhr.response);
-    }
+async function request(url) {
+  const headers = new Headers();
+  headers.append("Accept", "application/json");
+  const response = await fetch(url, {
+    headers
   });
+  return await response.json();
 }
 
 function etf2lUserData(id) {
   return new Promise(async resolve => {
+    console.log("Getting ETF2L data for " + id);
     let userURL = "http://api.etf2l.org/player/" + id;
     let resultURL = "http://api.etf2l.org/player/" + id + "/results/1?since=0";
 
     let userJSON = await request(userURL);
-    if (userJSON.status.code != 404 && userJSON.status.code != 500) {
+    if (
+      userJSON &&
+      userJSON.status.code != 404 &&
+      userJSON.status.code != 500
+    ) {
       let resultJSON = await request(resultURL);
       let name = userJSON.player.name;
       let etf2lID = userJSON.player.id;
       let team = getTeam(resultJSON);
       let division = getDiv(resultJSON);
-      userData = {id: id, league: "etf2l", data: {name: name, team: team, division: division, etf2lID: etf2lID}, registered: true}
+      userData = {
+        id: id,
+        league: "etf2l",
+        data: { name: name, team: team, division: division, etf2lID: etf2lID },
+        registered: true
+      };
     } else {
-      userData = {id: id, registered: false};
+      userData = { id: id, registered: false };
     }
     resolve(userData);
   });
@@ -123,8 +141,12 @@ function etf2lUserData(id) {
         let category = resultJSON.results[i].competition.category;
         let clan1 = resultJSON.results[i].clan1;
         let clan2 = resultJSON.results[i].clan2;
-        if (category.includes("6v6 Season") && tier != null && (clan1.was_in_team == 1 || clan2.was_in_team == 1)) {
-          console.log(competitionName);
+        if (
+          category.includes("6v6 Season") &&
+          tier != null &&
+          (clan1.was_in_team == 1 || clan2.was_in_team == 1)
+        ) {
+          // console.log(competitionName);
           if (tierName.includes("Division") && tier > 2) {
             return null;
           }
@@ -134,8 +156,12 @@ function etf2lUserData(id) {
           }
           if (tier >= 3) return tier + 1;
           return tier;
-        } else if (category.includes("6v6 Season") && competitionName.includes("Playoffs") && (clan1.was_in_team == 1 || clan2.was_in_team == 1)) {
-          console.log(competitionName);
+        } else if (
+          category.includes("6v6 Season") &&
+          competitionName.includes("Playoffs") &&
+          (clan1.was_in_team == 1 || clan2.was_in_team == 1)
+        ) {
+          // console.log(competitionName);
           if (competitionName.includes("Division 1")) {
             return 1;
           }
@@ -161,23 +187,94 @@ function etf2lUserData(id) {
   }
 }
 
+function rglUserData(id) {
+  return new Promise(async resolve => {
+    console.log("Getting RGL data for " + id);
+    let userURL = "https://rgl.gg/Public/API/v1/PlayerHistory.aspx?s=" + id;
+    let userJSON = JSON.parse(
+      await fetch(userURL)
+        .then(response => {
+          return response.text();
+        })
+        .then(html => {
+          const document = new DOMParser().parseFromString(html, "text/html");
+          return document.querySelector("#lblOutput").innerText;
+        })
+    );
+    if (userJSON && userJSON[0]) {
+      let playerObj = userJSON[0];
+      let name = playerObj.CurrentAlias;
+      let division = getDiv(playerObj);
+      userData = {
+        id: id,
+        league: "rgl",
+        data: { name: name, division: division },
+        registered: true
+      };
+    } else {
+      userData = { id: id, registered: false };
+    }
+    resolve(userData);
+  });
+
+  function getDiv(playerObj) {
+    if (
+      playerObj &&
+      playerObj.PlayerHistory &&
+      playerObj.PlayerHistory.length > 0
+    ) {
+      for (const entry of playerObj.PlayerHistory) {
+        if (entry.RegionName.includes("Traditional Sixes")) {
+          const divName = entry.GroupName;
+          if (divName.includes("Invite")) {
+            return "rgl_inv";
+          }
+          if (divName.includes("Advanced")) {
+            return "rgl_adv";
+          }
+          if (divName.includes("Main")) {
+            return "rgl_main";
+          }
+          if (divName.includes("Intermediate")) {
+            return "rgl_im";
+          }
+          if (divName.includes("Open")) {
+            return "rgl_open";
+          }
+          if (divName.includes("Newcomer")) {
+            return "rgl_new";
+          }
+        }
+      }
+    }
+    return null;
+  }
+}
+
 function eseaUserData(id) {
   return new Promise(async resolve => {
-    let dataURL = "https://raw.githubusercontent.com/minicircle/esea_tf2_data/master/esea_data_full.json"
+    console.log("Getting ESEA data for " + id);
+    let dataURL =
+      "https://raw.githubusercontent.com/minicircle/esea_tf2_data/master/esea_data_full.json";
 
     if (eseaDivJSON == undefined) eseaDivJSON = await request(dataURL);
     let division = getDiv(eseaDivJSON, id);
     if (division != null) {
-      userData = {id: id, league: "esea", data: {division: division}, registered: true}
+      userData = {
+        id: id,
+        league: "esea",
+        data: { division: division },
+        registered: true
+      };
     } else {
-      userData = {id: id, registered: false};
+      userData = { id: id, registered: false };
     }
     resolve(userData);
   });
 
   function getDiv(divJSON, id) {
     let ids = Object.keys(divJSON);
-    let idPos = ids.indexOf(id)
+    let idPos = ids.indexOf(id);
 
     if (idPos != -1) {
       let division = divJSON[ids[idPos]];
@@ -197,32 +294,44 @@ function eseaUserData(id) {
 
 function ozfUserData(id) {
   return new Promise(async resolve => {
-    let dataURL = "https://raw.githubusercontent.com/kodeeey/OzfortressDivs/master/data/ozfortress_divs.json"
+    let dataURL =
+      "https://raw.githubusercontent.com/kodeeey/OzfortressDivs/master/data/ozfortress_divs.json";
 
     if (ozfDivJSON == undefined) ozfDivJSON = await request(dataURL);
-    let division = getDiv(ozfDivJSON, id);
-    if (division != null) {
-      userData = {id: id, league: "esea", data: {division: division}, registered: true}
+    if (ozfDivJSON) {
+      let division = getDiv(ozfDivJSON, id);
+      if (division != null) {
+        userData = {
+          id: id,
+          league: "esea",
+          data: { division: division },
+          registered: true
+        };
+      } else {
+        userData = { id: id, registered: false };
+      }
     } else {
-      userData = {id: id, registered: false};
+      userData = { id: id, registered: false };
     }
     resolve(userData);
   });
 
   function getDiv(divJSON, id) {
-    let ids = Object.keys(divJSON);
-    let idPos = ids.indexOf(id)
+    if (divJSON) {
+      let ids = Object.keys(divJSON);
+      let idPos = ids.indexOf(id);
 
-    if (idPos != -1) {
-      let division = divJSON[ids[idPos]];
-      if (division.includes("premier")) {
-        return "ozf_prem";
-      }
-      if (division.includes("intermediate")) {
-        return "ozf_im";
-      }
-      if (division.includes("open")) {
-        return "ozf_open";
+      if (idPos != -1) {
+        let division = divJSON[ids[idPos]];
+        if (division.includes("premier")) {
+          return "ozf_prem";
+        }
+        if (division.includes("intermediate")) {
+          return "ozf_im";
+        }
+        if (division.includes("open")) {
+          return "ozf_open";
+        }
       }
     }
     return null;

@@ -13,7 +13,7 @@ function loadSettings() {
         settings: response.settings
       });
     }
-  }
+  };
   xhr.open("GET", chrome.extension.getURL("/res/cfg/config.json"), true);
   xhr.send();
 }
