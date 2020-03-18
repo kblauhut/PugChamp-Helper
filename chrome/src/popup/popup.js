@@ -25,7 +25,7 @@ window.onload = function() {
   //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
   let btnRegionEU = document.getElementById("btnRegionEU");
   let btnRegionNA = document.getElementById("btnRegionNA");
-  let btnRegionAU = document.getElementById("btnRegionAU");
+  // let btnRegionAU = document.getElementById("btnRegionAU");
 
   let captains_amount_tablerow = document.getElementById("captains_amount");
   let players_amount_tablerow = document.getElementById("players_amount");
@@ -33,8 +33,10 @@ window.onload = function() {
   let servers_ready_tablerow = document.getElementById("servers_ready");
   let draft_ready_tablerow = document.getElementById("draft_ready");
 
-  regionButtonMap = { eu: btnRegionEU, na: btnRegionNA, au: btnRegionAU };
-  let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
+  regionButtonMap = { eu: btnRegionEU, na: btnRegionNA };
+  // regionButtonMap = { eu: btnRegionEU, na: btnRegionNA, au: btnRegionAU };
+  let regionButtons = [btnRegionEU, btnRegionNA];
+  // let regionButtons = [btnRegionAU, btnRegionEU, btnRegionNA];
 
   let settings = getSettings();
 
