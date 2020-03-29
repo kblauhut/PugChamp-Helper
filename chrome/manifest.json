@@ -1,15 +1,14 @@
 {
   "manifest_version": 2,
   "name": "PugChamp Helper",
-  "description": "PugChamp ETF2L, ESEA and OzFortress division integration.",
-  "version": "1.4",
+  "description": "PugChamp ETF2L and ESEA division integration.",
+  "version": "1.40",
   "permissions": [
     "declarativeContent",
     "storage",
     "http://api.etf2l.org/*",
     "https://api.etf2l.org/*",
-    "https://rgl.gg/Public/API/v1/*",
-    "https://raw.githubusercontent.com/*"
+    "https://rgl.gg/Public/API/v1/*"
   ],
   "web_accessible_resources": [
     "res/css/divTag.css"
@@ -49,5 +48,9 @@
     "default_icon": {}
   },
   "content_security_policy": "script-src 'self' https://maxcdn.bootstrapcdn.com/ https://ajax.googleapis.com/; object-src 'self'",
-  "icons": {}
+  "icons": {
+    "16": "/res/images/icon16.png",
+    "48": "/res/images/icon48.png",
+    "128": "/res/images/icon128.png"
+  }
 }
