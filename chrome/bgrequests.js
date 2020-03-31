@@ -4,8 +4,8 @@ let openRequests = [];
 let eseaDivJSON;
 let ozfDivJSON;
 
-chrome.runtime.onConnect.addListener(function(port) {
-  port.onMessage.addListener(function(msg) {
+chrome.runtime.onConnect.addListener(function (port) {
+  port.onMessage.addListener(function (msg) {
     for (let i = 0; i < msg.idArray.length; i++) {
       returnData(msg.idArray[i], port);
     }
@@ -146,44 +146,63 @@ function etf2lUserData(id) {
           tier != null &&
           (clan1.was_in_team == 1 || clan2.was_in_team == 1)
         ) {
-          // console.log(competitionName);
-          if (tierName.includes("Division") && tier > 2) {
-            return null;
+          if (tierName.includes("Prem")) {
+            return "ETF2L-PREM";
           }
-          if (tier == 2) {
-            if (tierName.includes("Division 2")) return 2;
-            return 3;
+          if (tierName.includes("Division 1")) {
+            return "ETF2L-DIV1";
           }
-          if (tier >= 3) return tier + 1;
-          return tier;
+          if (tierName.includes("High")) {
+            return "ETF2L-DIV1";
+          }
+          if (tierName.includes("Division 2")) {
+            return "ETF2L-DIV2";
+          }
+          if (tierName.includes("Division 3")) {
+            return "ETF2L-DIV3";
+          }
+          if (tierName.includes("Mid")) {
+            return "ETF2L-MID";
+          }
+          if (tierName.includes("Low")) {
+            return "ETF2L-LOW";
+          }
+          if (tierName.includes("Open")) {
+            return "ETF2L-OPEN";
+          }
         } else if (
           category.includes("6v6 Season") &&
           competitionName.includes("Playoffs") &&
           (clan1.was_in_team == 1 || clan2.was_in_team == 1)
         ) {
-          // console.log(competitionName);
+          if (competitionName.includes("Prem")) {
+            return "ETF2L-PREM";
+          }
           if (competitionName.includes("Division 1")) {
-            return 1;
+            return "ETF2L-DIV1";
           }
           if (competitionName.includes("High")) {
-            return 1;
+            return "ETF2L-DIV1";
           }
           if (competitionName.includes("Division 2")) {
-            return 2;
+            return "ETF2L-DIV2";
+          }
+          if (competitionName.includes("Division 3")) {
+            return "ETF2L-DIV3";
           }
           if (competitionName.includes("Mid")) {
-            return 3;
+            return "ETF2L-MID";
           }
           if (competitionName.includes("Low")) {
-            return 4;
+            return "ETF2L-LOW";
           }
           if (competitionName.includes("Open")) {
-            return 5;
+            return "ETF2L-OPEN";
           }
         }
       }
+      return null;
     }
-    return null;
   }
 }
 

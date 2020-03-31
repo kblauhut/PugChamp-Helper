@@ -1,8 +1,9 @@
 {
-  "colors":{
+  "colors": {
     "prem": "#EB4B4B",
     "div1": "#D32CE6",
     "div2": "#8847FF",
+    "div3": "#5647ff",
     "mid": "#4B69FF",
     "low": "#5E98D9",
     "open": "#B0C3D9",

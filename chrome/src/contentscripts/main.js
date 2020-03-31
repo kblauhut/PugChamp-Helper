@@ -6,7 +6,7 @@ let region = document.URL.substring(
   document.URL.indexOf("/") + 4
 );
 
-chrome.storage.sync.get(["colors", "querystrings", "settings"], function(
+chrome.storage.sync.get(["colors", "querystrings", "settings"], function (
   result
 ) {
   colors = result.colors;
@@ -16,7 +16,7 @@ chrome.storage.sync.get(["colors", "querystrings", "settings"], function(
   let queueTables = document.getElementsByClassName(querystrings.queueTables);
   let queue = document.getElementsByClassName(querystrings.queue);
   if (settings.divTags)
-    document.addEventListener("loaded", function(event) {
+    document.addEventListener("loaded", function (event) {
       let style = document.createElement("link");
       style.rel = "stylesheet";
       style.type = "text/css";
@@ -43,8 +43,8 @@ function addMutationObserver(target, type) {
   if (type == "draft")
     config = { childList: true, attributes: true, subtree: true };
 
-  let observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+  let observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
       if (type == "queue") {
         queueMutation(mutation, target);
       } else {
@@ -91,7 +91,7 @@ function updateTable(elements) {
   let idArray = getIds(elements);
   let port = chrome.runtime.connect({ name: region });
   port.postMessage({ idArray: idArray });
-  port.onMessage.addListener(function(msg) {
+  port.onMessage.addListener(function (msg) {
     for (let i = 0; i < elements.length; i++) {
       elementID = elements[i].children[1].firstElementChild
         .getAttribute("href")
@@ -134,27 +134,31 @@ function updateUser(targetElement, div, id) {
   }
 
   switch (div) {
-    case 0:
+    case "ETF2L-PREM":
       tag.style.background = colors.prem;
       tag.innerText = "PREM";
       break;
-    case 1:
+    case "ETF2L-DIV1":
       tag.style.background = colors.div1;
       tag.innerText = "DIV1";
       break;
-    case 2:
+    case "ETF2L-DIV2":
       tag.style.background = colors.div2;
       tag.innerText = "DIV2";
       break;
-    case 3:
+    case "ETF2L-DIV3":
+      tag.style.background = colors.div3;
+      tag.innerText = "DIV3";
+      break;
+    case "ETF2L-MID":
       tag.style.background = colors.mid;
       tag.innerText = "MID";
       break;
-    case 4:
+    case "ETF2L-LOW":
       tag.style.background = colors.low;
       tag.innerText = "LOW";
       break;
-    case 5:
+    case "ETF2L-OPEN":
       tag.style.background = colors.open;
       tag.innerText = "OPEN";
       break;
@@ -182,33 +186,9 @@ function updateUser(targetElement, div, id) {
       tag.style.background = colors.open;
       tag.innerText = "RGL-N";
       break;
-    case "esea_inv":
-      tag.style.background = colors.prem;
-      tag.innerText = "ESEA-I";
-      break;
-    case "esea_im":
-      tag.style.background = colors.div2;
-      tag.innerText = "ESEA-IM";
-      break;
-    case "esea_open":
-      tag.style.background = colors.low;
-      tag.innerText = "ESEA-O";
-      break;
-    case "ozf_prem":
-      tag.style.background = colors.prem;
-      tag.innerText = "OZF-P";
-      break;
-    case "ozf_im":
-      tag.style.background = colors.div1;
-      tag.innerText = "OZF-IM";
-      break;
-    case "ozf_open":
-      tag.style.background = colors.div2;
-      tag.innerText = "OZF-O";
-      break;
     case null:
       tag.style.background = colors.null;
-      tag.innerText = "NERD";
+      tag.innerText = "NEW";
       break;
   }
 }
