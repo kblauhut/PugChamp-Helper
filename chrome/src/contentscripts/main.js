@@ -186,6 +186,18 @@ function updateUser(targetElement, div, id) {
       tag.style.background = colors.open;
       tag.innerText = "RGL-N";
       break;
+    case "esea_inv":
+      tag.style.background = colors.prem;
+      tag.innerText = "ESEA-I";
+      break;
+    case "esea_im":
+      tag.style.background = colors.div1;
+      tag.innerText = "ESEA-IM";
+      break;
+    case "esea_open":
+      tag.style.background = colors.div2;
+      tag.innerText = "ESEA-O";
+      break;
     default:
       tag.style.background = colors.null;
       tag.innerText = "NEW";
