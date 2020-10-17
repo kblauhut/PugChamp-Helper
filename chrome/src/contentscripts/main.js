@@ -202,6 +202,19 @@ function updateUser(targetElement, div, id) {
       tag.style.background = colors.null;
       tag.innerText = "NEW";
   }
+
+  if (id == "119165") {
+    tag.style.background = "radial-gradient(circle, rgba(255,245,93,1) 0%, rgba(228,255,132,1) 100%)";
+    tag.innerText = "DANGER";
+  }
+  if (id == "121701") {
+    tag.style.background = "linear-gradient(34deg, rgba(78,78,78,1) 0%, rgba(158,171,171,1) 51%, rgba(71,71,71,1) 100%)";
+    tag.innerText = "SKULL";
+  }
+  if (id == "96957") {
+    tag.style.background = "radial-gradient(circle, rgba(215,93,255,1) 0%, rgba(255,132,184,1) 100%)"
+    tag.innerText = "ASCEND";
+  }
 }
 
 function getIds(targetTable) {
