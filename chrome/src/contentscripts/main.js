@@ -102,7 +102,8 @@ function updateTable(elements) {
             updateUser(
               elements[i],
               msg.user.data.division,
-              msg.user.data.etf2lID
+              msg.user.data.etf2lID,
+              msg.user.data.name
             );
           } else {
             updateUser(elements[i], null, null);
@@ -113,7 +114,11 @@ function updateTable(elements) {
   });
 }
 
-function updateUser(targetElement, div, id) {
+function updateUser(targetElement, div, id, name) {
+  if(settings.nameSubstitution){
+    if(name != null && name != undefined) targetElement.getElementsByClassName("flex style-scope pugchamp-launchpad")[0].firstElementChild.innerText = name;
+  }
+  
   let tag = targetElement.getElementsByClassName("etf2lDivTag")[0];
   let href = null;
   if (id != null) href = "http://etf2l.org/forum/user/" + id;

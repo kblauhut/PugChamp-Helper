@@ -22,7 +22,7 @@ document.head.appendChild(togglebutton);
 // This has to be in a onload block so it only executes when the html is loaded, otherwise the elements don't exist yet and can't be found.
 window.onload = function() {
   let divTagToggle = document.getElementById("divTagToggle");
-  //let btnNameSubstitution = document.getElementById('btnNameSubstitution');
+  let nameSubToggle = document.getElementById("nameSubToggle");
   let btnRegionEU = document.getElementById("btnRegionEU");
   let btnRegionNA = document.getElementById("btnRegionNA");
   // let btnRegionAU = document.getElementById("btnRegionAU");
@@ -93,11 +93,11 @@ window.onload = function() {
     setSettings();
   };
 
-  /*btnNameSubstitution.onclick = function () {
+  nameSubToggle.onclick = function() {
     settings.nameSubstitution = !settings.nameSubstitution;
-    updateButton(settings.nameSubstitution, btnNameSubstitution);
+    updateNameSub(settings.nameSubstitution, nameSubToggle);
     setSettings();
-  };*/
+  };
 
   function selectRegion(region) {
     selectRegionButton(regionButtonMap[region]);
