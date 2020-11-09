@@ -15,7 +15,7 @@ chrome.storage.sync.get(["colors", "querystrings", "settings"], function (
   let draftTables = document.getElementsByClassName(querystrings.draftTables);
   let queueTables = document.getElementsByClassName(querystrings.queueTables);
   let queue = document.getElementsByClassName(querystrings.queue);
-  if (settings.divTags)
+  if (settings.divTags || settings.nameSubstitution)
     document.addEventListener("loaded", function (event) {
       let style = document.createElement("link");
       style.rel = "stylesheet";
@@ -118,6 +118,7 @@ function updateUser(targetElement, div, id, name) {
   if(settings.nameSubstitution){
     if(name != null && name != undefined) targetElement.getElementsByClassName("flex style-scope pugchamp-launchpad")[0].firstElementChild.innerText = name;
   }
+  if(!settings.divTags) return;
   
   let tag = targetElement.getElementsByClassName("etf2lDivTag")[0];
   let href = null;
@@ -208,17 +209,9 @@ function updateUser(targetElement, div, id, name) {
       tag.innerText = "NEW";
   }
 
-  if (id == "119165") {
-    tag.style.background = "radial-gradient(circle, rgba(255,245,93,1) 0%, rgba(228,255,132,1) 100%)";
-    tag.innerText = "DANGER";
-  }
-  if (id == "121701") {
-    tag.style.background = "linear-gradient(34deg, rgba(78,78,78,1) 0%, rgba(158,171,171,1) 51%, rgba(71,71,71,1) 100%)";
-    tag.innerText = "SKULL";
-  }
-  if (id == "96957") {
-    tag.style.background = "radial-gradient(circle, rgba(215,93,255,1) 0%, rgba(255,132,184,1) 100%)"
-    tag.innerText = "ASCEND";
+  if (id == "124593") {
+    tag.style.background = "linear-gradient(90deg, rgba(205,203,238,1) 0%, rgba(255,44,225,1) 47%, rgba(188,244,255,1) 100%)"
+    tag.innerText = "FREAK";
   }
 }
 
