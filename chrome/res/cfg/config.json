@@ -21,6 +21,6 @@
   "settings": {
     "region": "eu",
     "divTags": true,
-    "nameSubstitution": true
+    "nameSubstitution": false
   }
 }

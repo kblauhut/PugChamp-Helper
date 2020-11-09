@@ -66,6 +66,10 @@ window.onload = function() {
     $(toggleElement).prop("checked", isEnabled);
   }
 
+  function updateNameSub(isEnabled, toggleElement) {
+    $(toggleElement).prop("checked", isEnabled);
+  }
+
   btnRegionEU.onclick = function() {
     settings.region = "eu";
     setSettings();
@@ -107,6 +111,7 @@ window.onload = function() {
     chrome.storage.sync.get("settings", function(data) {
       settings = data.settings;
       updateDivToggle(settings.divTags, divTagToggle);
+      updateNameSub(settings.nameSubstitution, nameSubToggle)
       selectRegion(settings.region);
     });
     chrome.storage.sync.get("pugchamp_info", function(info_dict) {
