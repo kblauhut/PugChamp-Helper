@@ -4,7 +4,6 @@
   "description": "PugChamp ETF2L, RGL and ESEA division integration.",
   "version": "1.45",
   "permissions": [
-    "declarativeContent",
     "storage",
     "http://api.etf2l.org/*",
     "https://api.etf2l.org/*",
