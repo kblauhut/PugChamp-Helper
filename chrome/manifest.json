@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "PugChamp Helper",
   "description": "PugChamp ETF2L, RGL and ESEA division integration.",
-  "version": "1.46",
+  "version": "1.47",
   "permissions": [
     "storage",
     "http://api.etf2l.org/*",

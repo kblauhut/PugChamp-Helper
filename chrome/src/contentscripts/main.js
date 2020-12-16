@@ -115,11 +115,11 @@ function updateTable(elements) {
 }
 
 function updateUser(targetElement, div, id, name) {
-  if(settings.nameSubstitution){
-    if(name != null && name != undefined) targetElement.getElementsByClassName("flex style-scope pugchamp-launchpad")[0].firstElementChild.innerText = name;
+  if (settings.nameSubstitution) {
+    if (name != null && name != undefined) targetElement.getElementsByClassName("flex style-scope pugchamp-launchpad")[0].firstElementChild.innerText = name;
   }
-  if(!settings.divTags) return;
-  
+  if (!settings.divTags) return;
+
   let tag = targetElement.getElementsByClassName("etf2lDivTag")[0];
   let href = null;
   if (id != null) href = "http://etf2l.org/forum/user/" + id;
@@ -213,8 +213,11 @@ function updateUser(targetElement, div, id, name) {
     tag.style.background = "linear-gradient(90deg, rgba(205,203,238,1) 0%, rgba(255,44,225,1) 47%, rgba(188,244,255,1) 100%)"
     tag.innerText = "FREAK";
   }
+  if (id == "119165") {
+    tag.style.background = "linear-gradient(126deg, rgba(191,63,162,1) 0%, rgba(244,178,248,1) 22%, rgba(255,255,255,1) 43%, rgba(192,120,255,1) 72%, rgba(168,231,232,1) 100%)"
+    tag.className += " animated"
+  }
 }
-
 function getIds(targetTable) {
   let idArray = [];
   for (let i = 0; i < targetTable.length; i++) {
